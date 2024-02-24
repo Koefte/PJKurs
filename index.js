@@ -10,7 +10,7 @@ function hasAllKeys(objToCheck, keysObj) {
 }
 
 
-// Middleware to parse JSON in the request body
+
 app.use(bodyParser.json());
 
 const acc = {
@@ -22,7 +22,7 @@ const acc = {
 // POST request handler
 app.post('/api/users', (req, res) => {
   const requestData = req.body;
-  if(!hasAllKeys(acc,requestData)){
+  if(!hasAllKeys(acc,requestData) ){
     res.status(400).json({message:"Wrong data"})
     return;
   }
@@ -30,6 +30,14 @@ app.post('/api/users', (req, res) => {
   try {
     const existingData = fs.readFileSync('users.json', 'utf-8');
     const parsedData = JSON.parse(existingData);
+    for(let user of parsedData){
+      console.log(user)
+      if(user.email == requestData.email){
+        console.log(`Found duplicate: ${requestData}`)
+        res.status(400).json({message:"No duplicates allowed, one user per email"})
+        return
+      }
+    }
     parsedData.push(requestData);
     fs.writeFileSync('users.json', JSON.stringify(parsedData, null, 2), 'utf-8');
     console.log('Data appended to users.json');
@@ -42,7 +50,18 @@ app.post('/api/users', (req, res) => {
   res.status(200).json({ message: 'POST request received successfully' });
 });
 
-// Start the server
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
+});
+
+app.get('/api/users', (req, res) => {
+  try {
+    const data = fs.readFileSync('users.json', 'utf-8');
+    const jsonData = JSON.parse(data);
+
+    res.status(200).json(jsonData);
+  } catch (error) {
+    console.error('Error reading users.json:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
