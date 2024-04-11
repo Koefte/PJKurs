@@ -6,6 +6,7 @@
     <string name="title_login">Login</string>
     <string name="text_input_username">Username</string>
     <string name="text_input_email">Email</string>
+    <string name="text_button_login">Log In</string>
 
     <string name="password_placeholder">password123</string>
 </resources>
