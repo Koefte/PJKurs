@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">DroneDeliverys</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_login">Login</string>
+    <string name="text_input_username">Username</string>
+    <string name="text_input_email">Email</string>
+
+    <string name="password_placeholder">password123</string>
+</resources>
