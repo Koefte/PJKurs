@@ -40,11 +40,11 @@
 
             android:paddingTop="80dp"
 
-            android:text="@string/text_input_username"
+            android:text="@string/text_input_email"
             />
 
         <EditText
-            android:id="@+id/login_input_username"
+            android:id="@+id/login_input_email"
 
             style="@style/wrap_content_style"
 
@@ -52,7 +52,7 @@
             android:backgroundTint="@color/white"
 
             android:textColor="@color/white"
-            android:inputType="textNoSuggestions"
+            android:inputType="textEmailAddress"
             android:textAlignment="center"
             />
 
