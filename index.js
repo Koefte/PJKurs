@@ -14,9 +14,9 @@ function hasAllKeys(objToCheck, keysObj) {
 app.use(bodyParser.json());
 
 const acc = {
-  vorname:"Max",
-  nachname:"Mustermann",
+  name:"Max",
   email:"maxmustermann@gmail.com",
+  passwort:"passwort"
 } 
 
 // POST request handler
