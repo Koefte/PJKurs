@@ -11,6 +11,8 @@
     <dimen name="button_padding">10dp</dimen>
     <dimen name="button_width">150dp</dimen>
 
+    <dimen name="input_text_width">150dp</dimen>
+
     <dimen name="topic_split_margin_top">40dp</dimen>
 
     <dimen name="font_size_header1">48sp</dimen>
@@ -18,4 +20,9 @@
     <dimen name="font_size_header3">24sp</dimen>
 
     <dimen name="font_size_standard">18sp</dimen>
+
+    <dimen name="font_size_small">12sp</dimen>
+
+    <dimen name="icon_size">60dp</dimen>
+    <dimen name="icon_margin">20dp</dimen>
 </resources>
