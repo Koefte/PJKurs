@@ -1,12 +1,18 @@
 <resources>
     <string name="app_name">DroneDeliverys</string>
+
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-    <string name="title_login">Login</string>
+
+    <string name="title_login">Log in</string>
+
     <string name="text_input_username">Username</string>
     <string name="text_input_email">Email</string>
-    <string name="text_button_login">Log In</string>
+    <string name="text_input_password">Password</string>
 
-    <string name="password_placeholder">password123</string>
+    <string name="text_password_reset">Forgot your password?</string>
+    <string name="text_create_account">Don´t have an Account?</string>
+
+    <string name="text_button_login">Log In</string>
 </resources>
