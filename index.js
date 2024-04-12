@@ -74,7 +74,7 @@ app.listen(port, () => {
 app.get('/api/users', (req, res) => {
   try {
     const data = fs.readFileSync('users.json', 'utf-8');
-    const jsonData = JSON.parse(data);
+    const jsonData = JSON.parse(data).map(data => ({name: data.name, email: data.email}));
 
     res.status(200).json(jsonData);
     console.log("Succesfully received get request")
