@@ -1,20 +1,17 @@
 package de.anbeli.dronedelivery;
 
-import static android.app.PendingIntent.getActivity;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import static de.anbeli.dronedelivery.ErrorPopup.error_code;
 
 public class SignUpActivity  extends AppCompatActivity {
     EditText username_inp;
@@ -46,9 +43,39 @@ public class SignUpActivity  extends AppCompatActivity {
         signup_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!password_inp.equals(password_inp_2)) {
-                    ErrorPopup error = new ErrorPopup(v.getContext(), getString(R.string.error_non_matching_password), 1000);
-                    error.show();
+                String username = username_inp.getText().toString();
+                String email = email_inp.getText().toString();
+                String password_initial = password_inp.getText().toString();
+                String password_confirm = password_inp_2.getText().toString();
+
+                error_code error = error_code.NO_ERROR;
+                String error_text = "";
+
+
+                if(!password_initial.equals(password_confirm)) error = error_code.SIGNUP_PASSWORD_NO_MATCH;
+                if(!(email.split("@").length==2 && email.contains("."))) error = error_code.SIGNUP_EMAIL_INVALID;
+                if(username.equals("") || email.equals("") || password_initial.equals("")) error = error_code.SIGNUP_FIELD_EMPTY;
+
+                if(error != error_code.NO_ERROR) {
+                    switch (error) {
+                        case SIGNUP_EMAIL_INVALID:
+                            error_text = getString(R.string.signup_email_invalid);
+                            break;
+                        case SIGNUP_EMAIL_TAKEN:
+                            error_text = getString(R.string.signup_email_taken);
+                            break;
+                        case SIGNUP_FIELD_EMPTY:
+                            error_text = getString(R.string.signup_field_empty);
+                            break;
+                        case SIGNUP_PASSWORD_NO_MATCH:
+                            error_text = getString(R.string.signup_password_no_match);
+                            break;
+                    }
+
+                    ErrorPopup errorPopup = new ErrorPopup(v.getContext(), error_text, 1000);
+                    errorPopup.show();
+                } else {
+
                 }
             }
         });

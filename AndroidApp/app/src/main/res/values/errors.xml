@@ -1,0 +1,6 @@
+<resources>
+    <string name="signup_password_no_match">Repeated password and password do not match!</string>
+    <string name="signup_email_invalid">Provided Email is invalid</string>
+    <string name="signup_email_taken">There is already an Account with this Email</string>
+    <string name="signup_field_empty">All fields must be filled out</string>
+</resources>

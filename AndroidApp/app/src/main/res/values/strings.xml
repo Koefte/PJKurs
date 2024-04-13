@@ -15,8 +15,6 @@
     <string name="text_input_password">Password</string>
     <string name="text_input_password_2">Repeat Password</string>
 
-    <string name="error_non_matching_password">Passwords don´t match!</string>
-
     <string name="text_password_reset">Forgot your password?</string>
     <string name="text_create_account">Don´t have an Account?</string>
 
