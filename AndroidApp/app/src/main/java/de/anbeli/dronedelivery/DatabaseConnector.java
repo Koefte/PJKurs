@@ -1,11 +1,9 @@
 package de.anbeli.dronedelivery;
 
-import android.media.metrics.Event;
 import android.os.Handler;
 import android.os.Looper;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;

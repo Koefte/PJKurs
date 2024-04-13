@@ -14,6 +14,7 @@
     <dimen name="input_text_width">150dp</dimen>
 
     <dimen name="topic_split_margin_top">40dp</dimen>
+    <dimen name="topic_split_margin_top_small">10dp</dimen>
 
     <dimen name="font_size_header1">48sp</dimen>
     <dimen name="font_size_header2">32sp</dimen>
@@ -21,7 +22,7 @@
 
     <dimen name="font_size_standard">18sp</dimen>
 
-    <dimen name="font_size_small">12sp</dimen>
+    <dimen name="font_size_small">15sp</dimen>
 
     <dimen name="icon_size">60dp</dimen>
     <dimen name="icon_margin">20dp</dimen>

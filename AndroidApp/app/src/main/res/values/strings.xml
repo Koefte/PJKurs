@@ -8,13 +8,18 @@
     <string name="title_notifications">Notifications</string>
 
     <string name="title_login">Log in</string>
+    <string name="title_signup">Sign up</string>
 
     <string name="text_input_username">Username</string>
     <string name="text_input_email">Email</string>
     <string name="text_input_password">Password</string>
+    <string name="text_input_password_2">Repeat Password</string>
+
+    <string name="error_non_matching_password">Passwords don´t match!</string>
 
     <string name="text_password_reset">Forgot your password?</string>
     <string name="text_create_account">Don´t have an Account?</string>
 
     <string name="text_button_login">Log In</string>
+    <string name="text_button_signup">Sign Up</string>
 </resources>

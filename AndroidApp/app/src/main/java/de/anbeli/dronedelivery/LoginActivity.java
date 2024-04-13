@@ -1,7 +1,7 @@
 package de.anbeli.dronedelivery;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Debug;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,14 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.ProtocolException;
-import java.net.URI;
-import java.net.URL;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -51,17 +43,35 @@ public class LoginActivity extends AppCompatActivity {
         link_reset = findViewById(R.id.login_problem_password);
         login_btn = findViewById(R.id.login_input_button);
 
-        login_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onSignup();
-            }
-        });
+        set_listeners();
 
     }
 
-    void onSignup() {
+    void onLogin() {
         System.out.println(db_con.process_async_get_request());
+    }
+    void set_listeners() {
+        login_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onLogin();
+            }
+        });
+
+        link_reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        link_signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(v.getContext(), SignUpActivity.class);
+                startActivity(myIntent);
+            }
+        });
     }
 
     
