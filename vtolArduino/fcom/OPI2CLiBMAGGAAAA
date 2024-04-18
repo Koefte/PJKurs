@@ -1,26 +1,35 @@
-#include <QMC5883L.h>
-#include <Wire.h>
+#include <GPSHelper.h>
 
-QMC5883L compass;
+#define GPS_RX_PIN 16
+#define GPS_TX_PIN 17
 
-void setup()
-{
-	Wire.begin();
+GPSHelper gpsHelper(GPS_RX_PIN, GPS_TX_PIN);
 
-	compass.init();
-	compass.setSamplingRate(50);
-
-	Serial.begin(9600);
-	Serial.println("QMC5883L Compass Demo");
-	Serial.println("Turn compass in all directions to calibrate....");
+void setup() {
+  gpsHelper.begin();
+  Serial.begin(115200);
 }
 
-void loop()
-{
-	int heading = compass.readHeading();
-	if(heading==0) {
-		/* Still calibrating, so measure but don't print */
-	} else {
-		Serial.println(heading);
-	}
+void loop() {
+  // Fetch GPS data
+  if (gpsHelper.fetch() && gpsHelper.getSatellites() > 0) {
+    // Print fetched data
+    Serial.print("Longitude: ");
+    Serial.print(gpsHelper.getLongitude(), 6);  // Longitude
+    Serial.print(", Latitude: ");
+    Serial.print(gpsHelper.getLatitude(), 6);  // Latitude
+    Serial.print(", Altitude: ");
+    Serial.print(gpsHelper.getAltitude(), 1);  // Altitude
+    Serial.print(", Satellites: ");
+    Serial.println(gpsHelper.getSatellites());  // Number of satellites
+
+    // Calculate angle to a target
+    float targetLat = 40.0; // Example target latitude
+    float targetLong = -75.0; // Example target longitude
+    float angle = gpsHelper.getAngle(targetLat, targetLong);
+    Serial.print("Angle to target: ");
+    Serial.println(angle);
+  }
+
+  delay(1000);  // Adjust delay according to your requirements
 }
