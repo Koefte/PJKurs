@@ -1,9 +1,16 @@
 #include <GPSHelper.h>
+#include <ListLibrary.h>
 
 #define GPS_RX_PIN 16
 #define GPS_TX_PIN 17
 
+Verwaltung<float[]> ListVerwaltung;
 GPSHelper gpsHelper(GPS_RX_PIN, GPS_TX_PIN);
+
+
+
+bool flightState = false; //false for Disarmed, true for armed
+
 
 void setup() {
   gpsHelper.begin();
@@ -11,25 +18,9 @@ void setup() {
 }
 
 void loop() {
-  // Fetch GPS data
-  if (gpsHelper.fetch() && gpsHelper.getSatellites() > 0) {
-    // Print fetched data
-    Serial.print("Longitude: ");
-    Serial.print(gpsHelper.getLongitude(), 6);  // Longitude
-    Serial.print(", Latitude: ");
-    Serial.print(gpsHelper.getLatitude(), 6);  // Latitude
-    Serial.print(", Altitude: ");
-    Serial.print(gpsHelper.getAltitude(), 1);  // Altitude
-    Serial.print(", Satellites: ");
-    Serial.println(gpsHelper.getSatellites());  // Number of satellites
+  if(!flightState){ //code for preparing for flight
+      
+  }else{            //code to control flight
 
-    // Calculate angle to a target
-    float targetLat = 40.0; // Example target latitude
-    float targetLong = -75.0; // Example target longitude
-    float angle = gpsHelper.getAngle(targetLat, targetLong);
-    Serial.print("Angle to target: ");
-    Serial.println(angle);
   }
-
-  delay(1000);  // Adjust delay according to your requirements
 }
