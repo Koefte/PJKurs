@@ -20,8 +20,6 @@ public class LoginActivity extends AppCompatActivity {
     TextView link_signup;
     TextView link_reset;
     Button login_btn;
-    DatabaseConnector db_con;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +33,6 @@ public class LoginActivity extends AppCompatActivity {
             return insets;
         });
 
-        db_con = new DatabaseConnector(getString(R.string.db_access));
-
         email_inp = findViewById(R.id.login_input_email);
         password_inp = findViewById(R.id.login_input_password);
         link_signup = findViewById(R.id.login_problem_account);
@@ -48,7 +44,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     void onLogin() {
-        System.out.println(db_con.process_async_get_request());
+
+        DatabaseConnector.process_async_get_request("http://127.0.0.1:3001/api/users", res -> {
+            System.out.println("Haaaaaalo" + res);
+        });
     }
     void set_listeners() {
         login_btn.setOnClickListener(new View.OnClickListener() {
