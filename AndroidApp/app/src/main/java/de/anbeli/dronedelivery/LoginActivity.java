@@ -2,6 +2,7 @@ package de.anbeli.dronedelivery;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.JsonReader;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,6 +14,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import org.json.JSONException;
+
 public class LoginActivity extends AppCompatActivity {
 
     EditText email_inp;
@@ -20,9 +23,11 @@ public class LoginActivity extends AppCompatActivity {
     TextView link_signup;
     TextView link_reset;
     Button login_btn;
+    String db_access;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        db_access = getString(R.string.datbase_url);
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
@@ -44,9 +49,15 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     void onLogin() {
+        String login_post_data = "";
+        try {
+            login_post_data = Util.build_login_obj_string(email_inp.getText().toString(), password_inp.getText().toString());
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
 
-        DatabaseConnector.process_async_get_request("http://127.0.0.1:3001/api/users", res -> {
-            System.out.println("Haaaaaalo" + res);
+        DatabaseConnector.process_async_post_request(db_access, login_post_data, res -> {
+
         });
     }
     void set_listeners() {

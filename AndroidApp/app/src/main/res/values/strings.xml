@@ -1,8 +1,6 @@
 <resources>
     <string name="app_name">DroneDeliverys</string>
 
-    <string name="db_access">http://10.0.2.2:3001/api/users</string>
-
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
