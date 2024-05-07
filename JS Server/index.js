@@ -25,13 +25,15 @@ const entry = {
   passwort:"passwort"
 }
 
+const session = {
+  sessionID: 100,
+}
 
 // POST request handler
 app.post('/api/users', (req, res) => {
   const requestData = req.body;
 
-  console.log("received : " + requestData.email);
-  console.log("received : " + requestData.passwort);
+  console.log(requestData);
 
   if(hasAllKeys(requestData,acc) ){
     try {
@@ -61,12 +63,30 @@ app.post('/api/users', (req, res) => {
     existingData = JSON.parse(existingData)
 
     if(existingData.map(data => JSON.stringify([data.email, data.passwort])).includes(JSON.stringify(Object.values(requestData)))){
-      res.status(200).json({message:"Exists"})
+      const sessionID = Math.random() * Date.now();
+      let sessionData = JSON.parse(fs.readFileSync('ids.json', 'utf-8'));
+      sessionData.push({
+        email:requestData.email,
+        sessionID:sessionID
+      })
+      fs.writeFileSync('ids.json', JSON.stringify(sessionData, null, 2), 'utf-8');
+      res.status(200).json({message:"Exists",sessionID:sessionID})
     }
     else{
       res.status(200).json({message:"Doesnt exist"})
     }
     return;
+  }
+
+  
+  else if(hasAllKeys(requestData,session)){
+    let sessionData = JSON.parse(fs.readFileSync('ids.json', 'utf-8'));
+    console.log(sessionData)
+    sessionData = sessionData.filter((obj) => obj.sessionID != requestData.sessionID)
+    fs.writeFileSync('ids.json', JSON.stringify(sessionData, null, 2), 'utf-8');
+    res.status(200).json({message:"Logged out"})
+    return;
+    
   }
 
 
