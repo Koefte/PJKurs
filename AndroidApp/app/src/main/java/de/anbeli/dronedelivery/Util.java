@@ -24,16 +24,4 @@ public class Util {
 
         return jsonString;
     }
-
-    public static String escape(String jsString) {
-        jsString = jsString.replace("\\", "\\\\");
-        jsString = jsString.replace("\"", "\\\"");
-        jsString = jsString.replace("\b", "\\b");
-        jsString = jsString.replace("\f", "\\f");
-        jsString = jsString.replace("\n", "\\n");
-        jsString = jsString.replace("\r", "\\r");
-        jsString = jsString.replace("\t", "\\t");
-        jsString = jsString.replace("/", "\\/");
-        return jsString;
-    }
 }

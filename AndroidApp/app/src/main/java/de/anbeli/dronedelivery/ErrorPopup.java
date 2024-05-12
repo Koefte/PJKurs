@@ -13,7 +13,8 @@ public class ErrorPopup {
         SIGNUP_EMAIL_INVALID,
         SIGNUP_EMAIL_TAKEN,
         SIGNUP_FIELD_EMPTY,
-        SIGNUP_PASSWORD_NO_MATCH
+        SIGNUP_PASSWORD_NO_MATCH,
+        LOGIN_ACCOUNT_NO_EXIST
 
     }
 

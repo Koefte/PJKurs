@@ -2,6 +2,7 @@ package de.anbeli.dronedelivery;
 
 import static java.lang.System.out;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -19,7 +20,7 @@ public class DatabaseConnector {
     static ExecutorService mExecutor = Executors.newSingleThreadExecutor();
 
     public interface onTaskFinishListener {
-        void on_request_completed(String res);
+        void on_request_completed(JSONObject res) throws JSONException;
     }
 
     public static void process_async_get_request(String url, onTaskFinishListener listener) {
@@ -44,13 +45,17 @@ public class DatabaseConnector {
                 }
 
                 result = response.toString();
-
+                con.disconnect();
                 in.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
 
-            listener.on_request_completed(result);
+            try {
+                listener.on_request_completed(new JSONObject(result));
+            } catch (JSONException e) {
+                System.err.println("Parsing JSON response failed");
+            }
         };
 
         mExecutor.execute(backgroundRunnable);
@@ -83,14 +88,18 @@ public class DatabaseConnector {
                 }
 
                 result = response.toString();
-
+                con.disconnect();
                 in.close();
 
             } catch (Exception e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
 
-            listener.on_request_completed(result);
+            try {
+                listener.on_request_completed(new JSONObject(result));
+            } catch (JSONException e) {
+                System.err.println("Parsing JSON response failed");
+            }
         };
 
         mExecutor.execute(backgroundRunnable);

@@ -1,32 +1,7 @@
 [
   {
     "name": "John",
-    "email": "john@example.com",
-    "passwort": "password123"
-  },
-  {
-    "name": "John",
-    "email": "john@gmail.com",
-    "passwort": "password123"
-  },
-  {
-    "name": "John",
-    "email": "johnney@gmail.com",
-    "passwort": "password123"
-  },
-  {
-    "name": "John",
-    "email": "johnnnnnney@example.com",
-    "passwort": "password123"
-  },
-  {
-    "name": "John",
-    "email": "johathan@example.com",
-    "passwort": "password123"
-  },
-  {
-    "name": "John",
-    "email": "joni@example.com",
-    "passwort": "password123"
+    "email": "john@test.com",
+    "passwort": "pw"
   }
 ]

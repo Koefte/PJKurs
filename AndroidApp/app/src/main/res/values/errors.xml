@@ -3,4 +3,5 @@
     <string name="signup_email_invalid">Provided Email is invalid</string>
     <string name="signup_email_taken">There is already an Account with this Email</string>
     <string name="signup_field_empty">All fields must be filled out</string>
+    <string name="login_account_no_exist">There is no account with such login information</string>
 </resources>

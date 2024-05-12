@@ -24,6 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     TextView link_reset;
     Button login_btn;
     String db_access;
+    int session_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,13 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         DatabaseConnector.process_async_post_request(db_access, login_post_data, res -> {
+            if(res.getString("message").equals("Doesnt exist")) {
 
+            } else if(res.getString("message").equals("Exists")) {
+                session_id = res.getInt("sessionID");
+                Intent myIntent = new Intent(this, MainActivity.class);
+                startActivity(myIntent);
+            }
         });
     }
     void set_listeners() {
