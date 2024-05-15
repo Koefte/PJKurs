@@ -16,6 +16,8 @@
     <dimen name="topic_split_margin_top">40dp</dimen>
     <dimen name="topic_split_margin_top_small">10dp</dimen>
 
+    <dimen name="nav_bar_height">80dp</dimen>
+
     <dimen name="font_size_header1">48sp</dimen>
     <dimen name="font_size_header2">32sp</dimen>
     <dimen name="font_size_header3">24sp</dimen>

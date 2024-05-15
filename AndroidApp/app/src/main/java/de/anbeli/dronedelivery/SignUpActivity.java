@@ -77,7 +77,7 @@ public class SignUpActivity  extends AppCompatActivity {
                 } else {
                     String post_data = Util.build_user_obj_string(username, email, password_initial);
 
-                    DatabaseConnector.process_async_post_request(post_data, res -> {
+                    DatabaseConnector.process_async_post_request("users",post_data, res -> {
                         System.out.println(res);
                     });
                 }

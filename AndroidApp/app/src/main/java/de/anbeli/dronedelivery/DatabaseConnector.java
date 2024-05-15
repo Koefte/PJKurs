@@ -19,23 +19,19 @@ import android.content.SharedPreferences;
 
 public class DatabaseConnector {
     static ExecutorService mExecutor = Executors.newSingleThreadExecutor();
-    public static final String db_access = "http://10.0.2.2:3001/api/users";
+    public static final String db_access = "http://10.0.2.2:3001/api/";
     public static int session_id = -1;
     public interface onTaskFinishListener {
         void on_request_completed(JSONObject res) throws JSONException;
     }
 
-    public static void process_async_get_request(onTaskFinishListener listener) {
-        process_async_get_request(db_access, listener);
-    }
-
-    public static void process_async_get_request(String url, onTaskFinishListener listener) {
+    public static void process_async_get_request(String url_add, onTaskFinishListener listener) {
         Runnable backgroundRunnable = () -> {
 
             String result = "";
 
             try {
-                URL obj = new URL(url);
+                URL obj = new URL(db_access + url_add);
 
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
                 con.setRequestMethod("GET");
@@ -54,7 +50,7 @@ public class DatabaseConnector {
                 con.disconnect();
                 in.close();
             } catch (Exception e) {
-
+                System.err.println("Error connecting to " + db_access + url_add);
             }
 
             try {
@@ -67,17 +63,13 @@ public class DatabaseConnector {
         mExecutor.execute(backgroundRunnable);
     }
 
-    public static void process_async_post_request(String data, onTaskFinishListener listener) {
-        process_async_post_request(db_access, data, listener);
-    }
-
-    public static void process_async_post_request(String url, String data, onTaskFinishListener listener) {
+    public static void process_async_post_request(String url_add, String data, onTaskFinishListener listener) {
         Runnable backgroundRunnable = () -> {
 
             String result = "";
 
             try {
-                URL obj = new URL(url);
+                URL obj = new URL(db_access + url_add);
 
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
                 con.setDoOutput(true);
@@ -102,7 +94,7 @@ public class DatabaseConnector {
                 in.close();
 
             } catch (Exception e) {
-
+                System.err.println("Error connecting to " + db_access + url_add);
             }
 
             try {

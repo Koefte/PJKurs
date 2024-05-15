@@ -26,7 +26,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.login), (v, insets) -> {
 
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -42,27 +42,25 @@ public class LoginActivity extends AppCompatActivity {
         set_listeners();
 
         DatabaseConnector.session_id = getSharedPreferences("save_data", MODE_PRIVATE).getInt("session_id", -1);
+        System.out.println("saved session " + DatabaseConnector.session_id);
 
-    }
-
-    @Override
-    protected void onDestroy() {
-        getSharedPreferences("save_data", MODE_PRIVATE).edit().putInt("session_id", DatabaseConnector.session_id);
-        super.onDestroy();
+        if(DatabaseConnector.session_id != -1) {
+            Intent myIntent = new Intent(this, MainActivity.class);
+            startActivity(myIntent);
+        }
     }
 
     void onLogin() {
         String login_post_data = Util.build_login_obj_string(email_inp.getText().toString(), password_inp.getText().toString());
 
-
-
-        DatabaseConnector.process_async_post_request(login_post_data, res -> {
+        DatabaseConnector.process_async_post_request("users",login_post_data, res -> {
             if(res.getString("message").equals("Doesnt exist")) {
                 System.out.println(res.getString("message"));
                 ErrorPopup errorPopup = new ErrorPopup(this, getString(R.string.login_account_no_exist));
                 errorPopup.show();
             } else if(res.getString("message").equals("Exists")) {
                 DatabaseConnector.session_id = res.getInt("sessionID");
+                save_session_id();
                 Intent myIntent = new Intent(this, MainActivity.class);
                 startActivity(myIntent);
             }
@@ -79,5 +77,12 @@ public class LoginActivity extends AppCompatActivity {
             Intent myIntent = new Intent(v.getContext(), SignUpActivity.class);
             startActivity(myIntent);
         });
+    }
+
+    void save_session_id() {
+        SharedPreferences.Editor e = getSharedPreferences("save_data", MODE_PRIVATE).edit();
+        e.putInt("session_id", DatabaseConnector.session_id);
+        e.apply();
+        System.out.println("put sessionID " + DatabaseConnector.session_id);
     }
 }

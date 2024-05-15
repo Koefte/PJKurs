@@ -88,7 +88,7 @@ app.post('/api/users', (req, res) => {
         console.log(user)
         if(user.email == requestData.email){
           console.log(`Found duplicate: ${requestData}`)
-          res.status(400).json({message:"No duplicates allowed, one user per email"})
+          res.status(200).json({message:"No duplicates allowed, one user per email"})
           return
         }
       }
