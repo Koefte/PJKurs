@@ -21,40 +21,22 @@ public class ErrorPopup {
     Dialog dialog;
     TextView error;
     String code;
-    int time = -1;
+    Context con;
 
     public ErrorPopup(Context c, String text) {
-        dialog = new Dialog(c);
-        dialog.setContentView(R.layout.error_popup);
-        error = dialog.findViewById(R.id.error_text);
-        this.code = text;
+        con = c;
+        c.getMainExecutor().execute(() -> {
+            dialog = new Dialog(c);
+            dialog.setContentView(R.layout.error_popup);
+            error = dialog.findViewById(R.id.error_text);
+            this.code = text;
+        });
     }
-
-    public ErrorPopup(Context c, String text, int time) {
-        dialog = new Dialog(c);
-        dialog.setContentView(R.layout.error_popup);
-        error = dialog.findViewById(R.id.error_text);
-        this.time = time;
-        this.code = text;
-    }
-
     public void show() {
-        error.setText(code);
-        dialog.getWindow().setBackgroundDrawable(null);
-        dialog.show();
-        if(time != -1) {
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    dialog.dismiss();
-                }
-
-            }, time);
-        }
-    }
-
-    public void dismiss() {
-        dialog.dismiss();
+        con.getMainExecutor().execute(() -> {
+            error.setText(code);
+            dialog.getWindow().setBackgroundDrawable(null);
+            dialog.show();
+        });
     }
 }

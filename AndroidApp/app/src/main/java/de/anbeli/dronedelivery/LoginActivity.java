@@ -1,9 +1,8 @@
 package de.anbeli.dronedelivery;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.JsonReader;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -14,8 +13,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import org.json.JSONException;
-
 public class LoginActivity extends AppCompatActivity {
 
     EditText email_inp;
@@ -23,12 +20,9 @@ public class LoginActivity extends AppCompatActivity {
     TextView link_signup;
     TextView link_reset;
     Button login_btn;
-    String db_access;
-    int session_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        db_access = getString(R.string.datbase_url);
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
@@ -47,49 +41,43 @@ public class LoginActivity extends AppCompatActivity {
 
         set_listeners();
 
+        DatabaseConnector.session_id = getSharedPreferences("save_data", MODE_PRIVATE).getInt("session_id", -1);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        getSharedPreferences("save_data", MODE_PRIVATE).edit().putInt("session_id", DatabaseConnector.session_id);
+        super.onDestroy();
     }
 
     void onLogin() {
-        String login_post_data = "";
-        try {
-            login_post_data = Util.build_login_obj_string(email_inp.getText().toString(), password_inp.getText().toString());
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
+        String login_post_data = Util.build_login_obj_string(email_inp.getText().toString(), password_inp.getText().toString());
 
-        DatabaseConnector.process_async_post_request(db_access, login_post_data, res -> {
+
+
+        DatabaseConnector.process_async_post_request(login_post_data, res -> {
             if(res.getString("message").equals("Doesnt exist")) {
-
+                System.out.println(res.getString("message"));
+                ErrorPopup errorPopup = new ErrorPopup(this, getString(R.string.login_account_no_exist));
+                errorPopup.show();
             } else if(res.getString("message").equals("Exists")) {
-                session_id = res.getInt("sessionID");
+                DatabaseConnector.session_id = res.getInt("sessionID");
                 Intent myIntent = new Intent(this, MainActivity.class);
                 startActivity(myIntent);
             }
         });
     }
     void set_listeners() {
-        login_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onLogin();
-            }
+        login_btn.setOnClickListener(v -> onLogin());
+
+        link_reset.setOnClickListener(v -> {
+
         });
 
-        link_reset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        link_signup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent myIntent = new Intent(v.getContext(), SignUpActivity.class);
-                startActivity(myIntent);
-            }
+        link_signup.setOnClickListener(v -> {
+            Intent myIntent = new Intent(v.getContext(), SignUpActivity.class);
+            startActivity(myIntent);
         });
     }
-
-    
 }

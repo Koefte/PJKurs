@@ -72,10 +72,14 @@ public class SignUpActivity  extends AppCompatActivity {
                             break;
                     }
 
-                    ErrorPopup errorPopup = new ErrorPopup(v.getContext(), error_text, 1000);
+                    ErrorPopup errorPopup = new ErrorPopup(v.getContext(), error_text);
                     errorPopup.show();
                 } else {
+                    String post_data = Util.build_user_obj_string(username, email, password_initial);
 
+                    DatabaseConnector.process_async_post_request(post_data, res -> {
+                        System.out.println(res);
+                    });
                 }
             }
         });

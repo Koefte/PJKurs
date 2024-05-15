@@ -3,5 +3,15 @@
     "name": "John",
     "email": "john@test.com",
     "passwort": "pw"
+  },
+  {
+    "name": "anbeli",
+    "email": "anbeli260907@gmail.com",
+    "passwort": "test"
+  },
+  {
+    "name": "anbeli",
+    "email": "anbeli260907@gmail.comma",
+    "passwort": "test"
   }
 ]

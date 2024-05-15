@@ -52,7 +52,7 @@ app.post('/api/users', (req, res) => {
       console.log('Data appended to users.json');
     } catch (error) {
       console.error('Error appending data to users.json:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+      res.status(200).json({ error: 'Internal Server Error' });
       return;
     }
   
