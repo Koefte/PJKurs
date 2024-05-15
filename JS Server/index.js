@@ -10,6 +10,15 @@ function hasAllKeys(objToCheck, keysObj) {
   return Object.keys(keysObj).every(key => objToCheck.hasOwnProperty(key));
 }
 
+function getNameById(id){
+  let sessionData = JSON.parse(fs.readFileSync('ids.json', 'utf-8'));
+  console.log(sessionData)
+  for(let data of sessionData){
+    if(data.sessionID == id) return data.email
+  }
+  return null
+}
+
 
 
 app.use(bodyParser.json());
@@ -28,6 +37,42 @@ const entry = {
 const session = {
   sessionID: 100,
 }
+
+const requestA = {
+  sessionID: 100,
+  receiver: "max@gmail.com"
+}
+
+app.post('/api/requests',(req,res) => {
+  const requestData = req.body;
+  if(hasAllKeys(requestData,requestA)){
+    const senderEmail = getNameById(requestData.sessionID)
+    let requestTable = JSON.parse(fs.readFileSync('requests.json', 'utf-8'));
+    requestTable.push({sender:senderEmail,receiver:requestData.receiver})
+    fs.writeFileSync('requests.json', JSON.stringify(requestTable, null, 2), 'utf-8');
+    res.status(200).json({message:"Succesfully created the request"})
+    return
+  }
+  res.status(400).json({message:"Wrong format"})
+})
+
+app.get('/api/requests',(req,res) => {
+  const requestData = req.body;
+  if(hasAllKeys(requestData,session)){
+    const clientEmail = getNameById(requestData.sessionID)
+    let requestTable = JSON.parse(fs.readFileSync('requests.json', 'utf-8'));
+    let incomingRequests = []
+    let outgoingRequests = []
+    console.log(clientEmail)
+    for(let req of requestTable){
+      if(req.sender == clientEmail) outgoingRequests.push(req)
+      if(req.receiver == clientEmail) incomingRequests.push(req)
+    }
+    res.status(200).json({out:outgoingRequests,in:incomingRequests})
+    return
+  }
+  res.status(400).json({message:"Wrong format"})
+})
 
 // POST request handler
 app.post('/api/users', (req, res) => {
@@ -50,6 +95,8 @@ app.post('/api/users', (req, res) => {
       parsedData.push(requestData);
       fs.writeFileSync('users.json', JSON.stringify(parsedData, null, 2), 'utf-8');
       console.log('Data appended to users.json');
+      res.status(200).json({message:"Succesfully created the account"})
+      return
     } catch (error) {
       console.error('Error appending data to users.json:', error);
       res.status(200).json({ error: 'Internal Server Error' });
