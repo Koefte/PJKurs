@@ -242,14 +242,20 @@ void kalman_2d(void){
   P=(I-K*H)*P;
 }
 void calibrateKalmanOffset(){
-  int calValue = 4000;
+  int calValue = 200;
   float calOffsetTemp=0;
+  for(int a=0;a<10000;a++){ //SetKLAMALMatrix
+    imu_loop();
+  }
+
   for(int i=0;i<calValue;i++){
     imu_loop();
     calOffsetTemp+=VelocityVerticalKalman;
   }
-    calibratedOffset=calOffsetTemp/calValue;
+    calibratedOffset=0-(calOffsetTemp/calValue);
     Serial.println("CalibratedKalmanOffset");
+    Serial.println(calibratedOffset);
+    Serial.println(VelocityVerticalKalman+calibratedOffset);
     delay(1000);
 }
 
@@ -287,7 +293,7 @@ void holdAlt(){
   VelocityVertical=VelocityVertical+AccZInertial*0.004;
   kalman_2d();
   
-  Serial.println(VelocityVerticalKalman-calibratedOffset);
+  //Serial.println(VelocityVerticalKalman+calibratedOffset);
 }
 float getAlt() {
   baro.update();
@@ -365,8 +371,8 @@ void setup() {
     delay(100);
     if(loop_cnt==0) die("IMU interrupt not firing.");
   #endif
-
-  altholdSetup();
+  
+  //altholdSetup();
   cli.welcome();
 
   led.off(); //Set built in LED off to signal end of startup
