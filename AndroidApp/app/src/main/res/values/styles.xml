@@ -23,4 +23,7 @@
     <style name="input_text" parent="wrap_content_style">
         <item name="android:layout_width">@dimen/input_text_width</item>
     </style>
+
+    <style name="navbar_icon">
+    </style>
 </resources>

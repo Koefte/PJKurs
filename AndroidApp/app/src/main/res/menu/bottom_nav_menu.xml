@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item
+        android:title="@string/title_drones"
+        android:id="@+id/nav_drones"/>
+    <item
+        android:title="@string/title_settings"
+        android:id="@+id/nav_settings"/>
+    <item
+        android:title="@string/title_contacts"
+        android:id="@+id/nav_contacts"/>
+    <item
+        android:title="@string/title_deliveries"
+        android:id="@+id/nav_deliveries"/>
 </menu>
