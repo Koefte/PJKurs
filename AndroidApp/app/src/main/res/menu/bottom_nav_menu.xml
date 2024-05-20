@@ -1,23 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/delivery_page"
-        android:enabled="true"
-        android:icon="@drawable/baseline_account_circle_24"
-        android:title="@string/title_deliveries"/>
-    <item
-        android:id="@+id/drone_page"
-        android:enabled="true"
-        android:icon="@drawable/baseline_account_circle_24"
-        android:title="@string/title_drones"/>
-    <item
-        android:id="@+id/contact_page"
-        android:enabled="true"
-        android:icon="@drawable/baseline_account_circle_24"
-        android:title="@string/title_contacts"/>
-    <item
-        android:id="@+id/settings_page"
-        android:enabled="true"
-        android:icon="@drawable/baseline_account_circle_24"
-        android:title="@string/title_settings"/>
+
 </menu>
