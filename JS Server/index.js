@@ -53,6 +53,16 @@ app.post('/api/requests',(req,res) => {
     res.status(200).json({message:"Succesfully created the request"})
     return
   }
+  else if(hasAllKeys(requestData,session)){
+    const receiverEmail = getNameById(requestData.sessionID)
+    let requestTable = JSON.parse(fs.readFileSync('requests.json', 'utf-8'));
+    for(let request of requestTable){
+      if(request.receiver == receiverEmail) request.accepted = true
+    }
+    fs.writeFileSync('requests.json', JSON.stringify(requestTable, null, 2), 'utf-8');
+    res.status(200).json({message:"Succesfully accepted the request"})
+    return
+  }
   res.status(400).json({message:"Wrong format"})
 })
 
