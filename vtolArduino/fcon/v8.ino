@@ -252,7 +252,7 @@ void loop1() {
 //                                                       SETUP()                                                          //
 //========================================================================================================================//
 float sealevelBaro = 1013.25;
-const int smoothoutValue = 10;  // Size of the array for altitude and velocity smoothing
+const int smoothoutValue = 30;  // Size of the array for altitude and velocity smoothing
 float altitudes[smoothoutValue];   // Array to store altitude values
 float velocities[smoothoutValue];  // Array to store velocity values
 int altIndex = 0;                  // Index to keep track of the current position in the altitude array
@@ -273,9 +273,7 @@ float storeAndCalculateAverage(float newValue, float* array, int& index) {
     sum += array[i];
   }
   weight = (abs(sum/smoothoutValue) - abs(newValue))*(abs(sum/smoothoutValue) - abs(newValue))*(abs(sum/smoothoutValue) - abs(newValue));
-  AccZInertial=-sin(ahrs_pitch*(3.142/180))*AccX+cos(ahrs_pitch*(3.142/180))*sin(ahrs_roll*(3.142/180))* AccY+cos(ahrs_pitch*(3.142/180))*cos(ahrs_roll*(3.142/180))*AccZ;   
-  AccZInertial=(AccZInertial-1)*9.81*100;
-  array[index] = newValue*weight*;
+  array[index] = newValue*weight*0.5;
   return sum / smoothoutValue;
 }
 void holdAlt() {
