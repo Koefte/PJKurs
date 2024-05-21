@@ -2,11 +2,17 @@
   {
     "name": "John",
     "email": "john@example.com",
-    "passwort": "password123"
+    "passwort": "password123",
+    "contacts": [
+      "john@gmail.com"
+    ]
   },
   {
     "name": "John",
     "email": "john@gmail.com",
-    "passwort": "password123"
+    "passwort": "password123",
+    "contacts": [
+      "john@example.com"
+    ]
   }
 ]
