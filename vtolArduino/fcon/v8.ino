@@ -3,7 +3,23 @@
 //Copyright (c) 2023-2024 https://github.com/qqqlab/madflight
 //Copyright (c) 2022 Nicholas Rehm - dRehmFlight
  
-/*
+/*#########################################################################################################################
+How to use this quadcopter demo program 
+=======================================
+
+See http://madflight.com for detailed description
+
+Motor order diagram (Betaflight order)
+
+      front
+ CW -->   <-- CCW
+     4     2 
+      \ ^ /
+       |X|
+      / - \
+     3     1 
+CCW -->   <-- CW
+
 Arming: Set throttle low, then flip arm switch from DISARMED to ARMED.
 Disarming: Flip arm switch from ARMED to DISARMED, at any throttle position. "Kill switch".
 
@@ -46,8 +62,8 @@ fast blinking - something is wrong, connect USB serial for info
 //Serial debug on USB Serial port (no GPIO pins)
 
 //RC Receiver:
-#define HW_PIN_RCIN_RX     35
-//#define HW_PIN_RCIN_TX     0
+#define HW_PIN_RCIN_RX     16
+#define HW_PIN_RCIN_TX     17
 //#define HW_PIN_RCIN_INVERTER -1 //only used for STM32 targets
 
 //GPS:
@@ -78,7 +94,7 @@ fast blinking - something is wrong, connect USB serial for info
 //========================================================================================================================//
 
 //--- RC RECEIVER
-#define RCIN_USE  RCIN_USE_PPM //RCIN_USE_CRSF, RCIN_USE_SBUS, RCIN_USE_DSM, RCIN_USE_PPM, RCIN_USE_PWM
+#define RCIN_USE  RCIN_USE_CRSF //RCIN_USE_CRSF, RCIN_USE_SBUS, RCIN_USE_DSM, RCIN_USE_PPM, RCIN_USE_PWM
 #define RCIN_NUM_CHANNELS 6 //number of receiver channels (minimal 6)
 
 //--- IMU SENSOR
@@ -93,7 +109,7 @@ fast blinking - something is wrong, connect USB serial for info
 
 //--- BAROMETER SENSOR
 #define BARO_USE  BARO_USE_BMP280 // BARO_USE_BMP280, BARO_USE_MS5611, BARO_USE_NONE
-#define BARO_I2C_ADR  0x77    //set barometer I2C address, leave commented for default address. If unknown, use CLI 'i2c'
+#define BARO_I2C_ADR  0x77 //set barometer I2C address, leave commented for default address. If unknown, use CLI 'i2c'
 
 //--- EXTERNAL MAGNETOMETER SENSOR
 #define MAG_USE  MAG_USE_NONE // MAG_USE_QMC5883L, MAG_USE_NONE
@@ -145,7 +161,6 @@ int rcin_cfg_aux_max = 1815; //higest switch pwm
 const int out_MOTOR_COUNT = 2;
 //name the outputs, to make code more readable
 enum out_enum {MOTOR1,MOTOR2,SERVO1,SERVO2,SERVO3,SERVO4}; 
-
 //Low Pass Filter parameters. Do not touch unless you know what you are doing.
 float LP_accel       = 70;        //Accelerometer lowpass filter cutoff frequency in Hz (default MPU6050: 50Hz, MPU9250: 70Hz)
 float LP_gyro        = 60;        //Gyro lowpass filter cutoff frequency in Hz (default MPU6050: 35Hz, MPU9250: 60Hz)
@@ -178,6 +193,7 @@ float Kp_yaw         = 0.3;       //Yaw P-gain
 float Ki_yaw         = 0.05;      //Yaw I-gain
 float Kd_yaw         = 0.00015;   //Yaw D-gain (be careful when increasing too high, motors will begin to overheat!)
 
+
 float transitionFadeValue = 0;    //Faktor for control mixer 
 float tohoverFadeSpeed = 0.001;
 float toplaneFadeSpeed = 0.001;
@@ -186,8 +202,7 @@ float subTrim1=0.3;                   //levelout servo1
 float subTrim2=0.7;                   //levelout servo2
 float subTrim3=0.8;       
 float subTrim4=0.2;   
-float subTrim5;                 //levelout servo3
-
+float subTrim5;   
 //========================================================================================================================//
 //                              DECLARE GLOBAL VARIABLES                                                                  //
 //========================================================================================================================//
@@ -204,7 +219,7 @@ float AccX, AccY, AccZ, GyroX, GyroY, GyroZ, MagX, MagY, MagZ; //corrected and f
 float ahrs_roll, ahrs_pitch, ahrs_yaw;  //ahrs_Madgwick() estimate output in degrees. Positive angles are: roll right, yaw right, pitch up
 
 //Controller:
-float roll_PID = 0, pitch_PID = 0, yaw_PID = 0, thro_PID=0;
+float roll_PID = 0, pitch_PID = 0, yaw_PID = 0, thro_PID;
 
 //Flight status
 bool out_armed = false; //motors will only run if this flag is true
@@ -219,6 +234,7 @@ const float rad_to_deg = 57.29577951; //radians to degrees conversion constant
 //========================================================================================================================//
 //Note: most madflight modules are header only. By placing the madflight include here allows the modules to access the global variables without declaring them extern.
 #include <madflight.h>
+
 //========================================================================================================================//
 //                  SETUP1() LOOP1() EXECUTING ON SECOND CORE (only for dual core MCUs like ESP32 and RP2040)             //
 //========================================================================================================================//
@@ -235,118 +251,53 @@ void loop1() {
 //========================================================================================================================//
 //                                                       SETUP()                                                          //
 //========================================================================================================================//
-const int NUM_SAMPLES = 140;  // Number of samples to average
-float pressureInitialBaro = 101325;  // Initial sea level pressure in Pascals (update this as needed)
-float altitudeBarometer = 0;  // To store the initial altitude (baseline for relative measurement)
-const int VELOCITY_SAMPLES = 20;  // Number of velocity samples to average
-float velocityBuffer[VELOCITY_SAMPLES] = {0};  // Buffer to store the velocity samples
-int velocityIndex = 0;  // Current index in the velocity buffer
+float sealevelBaro = 1013.25;
+const int smoothoutValue = 10;  // Size of the array for altitude and velocity smoothing
+float altitudes[smoothoutValue];   // Array to store altitude values
+float velocities[smoothoutValue];  // Array to store velocity values
+int altIndex = 0;                  // Index to keep track of the current position in the altitude array
+int velIndex = 0;                  // Index to keep track of the current position in the velocity array
 
-const float velocityAlpha = 0.1;  // Smoothing factor for the low-pass filter (0 < alpha <= 1)
-float filteredVelocity = 0;  // Variable to store the filtered vertical velocity
-float filteredAltitude = 0;  // Variable to store the filtered altitude
-float lastFilteredAltitude = 0;  // Variable to store the previous filtered altitude
-float lastAltitude = 0;  // Store the last altitude for velocity calculation
-unsigned long lastTime = 0;  // Store the last time for velocity calculation
-float errorSum = 0;  // Variable to accumulate error for integral term
-const float kp = 0.1;  // Proportional gain
-const float ki = 0.01;  // Integral gain
-const float kd = 0.05;  // Derivative gain
+unsigned long lastTime = 0;        // Last time in milliseconds
+float lastAltitude = 0;            // Last altitude in meters
+const unsigned long interval = 1000 / 50; // Interval for 60 times per second
 
-void altholdSetup() {
-  baro.setup();
-  delay(100);
-  altitudeBarometer = 0;  // Reset initial altitude accumulator
-  for (int i = 0; i < 2000; i++) {
-    baro.update();
-    float pressure = baro.press_pa;
-    // Ensure pressure is valid
-    if (pressure <= 0) {
-      Serial.println("Error: Invalid pressure reading.");
-      return;
-    }
-    altitudeBarometer += 44330 * (1 - pow(pressure / 101325, 1 / 5.255));
+float storeAndCalculateAverage(float newValue, float* array, int& index) {
+  float weight = 1;
+  // Store the new value in the array
+  array[index] = newValue;
+  index = (index + 1) % smoothoutValue;  // Circular buffer logic
+  // Calculate the average of the values in the array
+  float sum = 0.0;
+  for (int i = 0; i < smoothoutValue; i++) {
+    sum += array[i];
   }
-  altitudeBarometer /= 2000;
-  filteredAltitude = altitudeBarometer;  // Initialize the filtered altitude
-  lastFilteredAltitude = filteredAltitude;  // Initialize last filtered altitude
-  lastAltitude = filteredAltitude;  // Initialize last altitude
-  lastTime = millis();  // Initialize the time
-  Serial.print("Initial Altitude: ");
-  Serial.println(altitudeBarometer);
+  weight = (abs(sum/smoothoutValue) - abs(newValue))*(abs(sum/smoothoutValue) - abs(newValue))*(abs(sum/smoothoutValue) - abs(newValue));
+  AccZInertial=-sin(ahrs_pitch*(3.142/180))*AccX+cos(ahrs_pitch*(3.142/180))*sin(ahrs_roll*(3.142/180))* AccY+cos(ahrs_pitch*(3.142/180))*cos(ahrs_roll*(3.142/180))*AccZ;   
+  AccZInertial=(AccZInertial-1)*9.81*100;
+  array[index] = newValue*weight*;
+  return sum / smoothoutValue;
 }
-
-float getAlt() {
-  float totalHeight = 0;
-  float totalSamples = 0; // Counter for total samples used
-
-  for (int i = 0; i < NUM_SAMPLES; i++) {
-    baro.update();  // Update the sensor reading
-    float pressure = baro.press_pa;
-    // Ensure pressure is valid
-    if (pressure <= 0) {
-      Serial.println("Error: Invalid pressure reading.");
-      return NAN;
-    }
-    float currHeight = 44330 * (1 - pow(pressure / pressureInitialBaro, 1 / 5.255)) - altitudeBarometer;
-
-    // Calculate the weight for the current sample
-    float change = fabs(currHeight - filteredAltitude);
-    float weight = change > 0.4 ? 4.0 : (change > 0.1 ? 2.0 : 1.0); // If the change is large (>0.4), use 4 samples
-
-    totalHeight += currHeight * weight; // Accumulate weighted height
-    totalSamples += weight; // Accumulate total samples used
-  }
-
-  float avgHeight = totalHeight / totalSamples; // Calculate weighted average height
-
-  // Calculate error
-  float error = avgHeight - filteredAltitude;
-  
-  // Update integral term
-  errorSum += error;
-  
-  // Calculate PID output
-  float output = kp * error + ki * errorSum + kd * (filteredAltitude - lastFilteredAltitude);
-  
-  // Update last filtered altitude
-  lastFilteredAltitude = filteredAltitude;
-  
-  // Update filtered altitude
-  filteredAltitude += output;
-
-  return filteredAltitude;
-}
-
 void holdAlt() {
-  float inputThro = rcin_thro;
   unsigned long currentTime = millis();
-  float currentAltitude = getAlt();
-  unsigned long elapsedTime = currentTime - lastTime;  // Time in milliseconds
+  if (currentTime - lastTime >= interval) {
+    baro.update();
+    float currentAltitude = storeAndCalculateAverage(44330 * (1 - pow(baro.press_pa / sealevelBaro, 1 / 5.255)), altitudes, altIndex);
+    unsigned long elapsedTime = currentTime - lastTime;  // Time in milliseconds
 
-  if (elapsedTime > 0) {
-    float verticalVelocity = (currentAltitude - lastAltitude) / (elapsedTime / 1000.0);  // Velocity in meters per second
-
-    // Update the buffer with the new velocity
-    velocityBuffer[velocityIndex] = verticalVelocity;
-    velocityIndex = (velocityIndex + 1) % VELOCITY_SAMPLES;
-
-    // Calculate the average of the last VELOCITY_SAMPLES velocities
-    float totalVelocity = 0;
-    for (int i = 0; i < VELOCITY_SAMPLES; i++) {
-      totalVelocity += velocityBuffer[i];
+    float verticalVelocity = 0;
+    if (elapsedTime > 0) {
+      verticalVelocity = (currentAltitude - lastAltitude) / (elapsedTime / 1000.0);
     }
-    float avgVelocity = totalVelocity / VELOCITY_SAMPLES;
 
-    // Apply the low-pass filter with double impact when change is towards zero
-    float changeTowardsZeroFactor = (fabs(avgVelocity) < fabs(filteredVelocity)) ? 2.0 : 1.0;
-    filteredVelocity = (velocityAlpha * changeTowardsZeroFactor) * avgVelocity + (1 - (velocityAlpha * changeTowardsZeroFactor)) * filteredVelocity;
-    lastAltitude = currentAltitude;
+    float avgVelocity = storeAndCalculateAverage(verticalVelocity, velocities, velIndex);
+    // Update the last time and last altitude for the next calculation
     lastTime = currentTime;
-
-    float wantedVerticalVelo = 4.0 * inputThro - 2.0;
-    float error = wantedVerticalVelo - filteredVelocity;
-    thro_PID = constrain(0.33 + error * 0.2, 0.0, 1.0);
+    lastAltitude = currentAltitude;
+    float changeInput = rcin_thro - 0.5;
+    float error = changeInput - constrain(avgVelocity*0.2,-0.3,0.3);
+    thro_PID = 0.4 + error*0.5;
+    Serial.println(thro_PID);
   }
 }
 void setup() {
@@ -369,7 +320,7 @@ void setup() {
 
   //IMU: keep on trying until no error is returned (some sensors need a couple of tries...)
   while(true) {
-    int rv = imu.setup(800); //request 1000 Hz sample rate, returns 0 on success, positive on error, negative on warning
+    int rv = imu.setup(1000); //request 1000 Hz sample rate, returns 0 on success, positive on error, negative on warning
     if(rv<=0) break;
     warn("IMU: init failed rv= " + String(rv) + ". Retrying...\n");
   }
@@ -379,6 +330,8 @@ void setup() {
   B_gyro = lowpass_to_beta(LP_gyro, imu.getSampleRate());
   B_mag = lowpass_to_beta(LP_mag, imu.getSampleRate());
   B_radio = lowpass_to_beta(LP_radio, imu.getSampleRate());
+
+  baro.setup(); //Barometer
   mag.setup(); //External Magnetometer
   bat.setup(); //Battery Monitor
   bb.setup(); //Black Box
@@ -388,6 +341,7 @@ void setup() {
   //Servos (set servos first just in case motors overwrite frequency of shared timers)
   for(int i=out_MOTOR_COUNT;i<HW_OUT_COUNT;i++) {
     out[i].begin(HW_PIN_OUT[i], 50, 800, 2400); //Standard servo at 50Hz
+
     out_command[i] = 0; //keep at 0 if you are using servo outputs for motors
     out[i].writeFactor(out_command[i]); //start the PWM output to the servos
   } 
@@ -406,11 +360,12 @@ void setup() {
   cli.calibrate_gyro();
 
   //set quarterion to initial yaw, so that AHRS settles faster
-  altholdSetup();
   ahrs_Setup();
+
   //start IMU update handler - do this last in setup(), as the handler needs all modules configured
   imu.onUpdate = imu_onUpdate;
   if(!imu.waitNewSample()) die("IMU interrupt not firing.");
+
   cli.welcome();
 
   led.off(); //Set built in LED off to signal end of startup
@@ -810,8 +765,8 @@ void control_Rate(bool zero_integrators) {
 
 void control_Mixer() {
  
-  if(rcin_aux>3){
-    //Serial.print("Binary Switch: 1.0");
+  if(rcin_aux==6){
+    //Serial.println("Binary Switch: 1.0");
     //Serial.print("fadedValue");
     //Serial.println(transitionFadeValue);
     if(transitionFadeValue<1-tohoverFadeSpeed){
@@ -819,7 +774,7 @@ void control_Mixer() {
     }
   }
   else{
-    //Serial.print("Binary Switch: 0.0");
+    //Serial.println("Binary Switch: 0.0");
     //Serial.print("fadedValue");
     //Serial.println(transitionFadeValue);
     if(transitionFadeValue>0+toplaneFadeSpeed){
@@ -827,8 +782,8 @@ void control_Mixer() {
     }
   }
 
-  out_command[MOTOR1] =  transitionFadeValue*(roll_PID + pitch_PID + thro_PID) + (1-transitionFadeValue)*(yaw_PID+rcin_thro);
-  out_command[MOTOR2] = - transitionFadeValue*(roll_PID + pitch_PID + thro_PID) - (1-transitionFadeValue)*(yaw_PID+rcin_thro);
+  out_command[MOTOR1] = transitionFadeValue*thro_PID +(1-transitionFadeValue)*rcin_thro - transitionFadeValue*(roll_PID + pitch_PID) - (1-transitionFadeValue)*(yaw_PID*0.5);
+  out_command[MOTOR2] = transitionFadeValue*thro_PID +(1-transitionFadeValue)*rcin_thro + transitionFadeValue*(roll_PID + pitch_PID) + (1-transitionFadeValue)*(yaw_PID*0.5);
   
 
   //mixing Servos
@@ -838,11 +793,12 @@ void control_Mixer() {
       out_command[SERVO1] = 0;
   }
   
-  out_command[SERVO2] = (transitionFadeValue*(yaw_PID*0.5+subTrim1)) + (1-transitionFadeValue)*(-roll_PID*4+subTrim3) ;
-  out_command[SERVO3] = (transitionFadeValue*(yaw_PID*0.5+subTrim2)) + (1-transitionFadeValue)*(-roll_PID*4+subTrim4);
+  out_command[SERVO2] = (transitionFadeValue*(yaw_PID*0.5+subTrim3)) + (1-transitionFadeValue)*(-roll_PID*4+subTrim1) ;
+  out_command[SERVO3] = (transitionFadeValue*(yaw_PID*0.5+subTrim4)) + (1-transitionFadeValue)*(-roll_PID*4+subTrim2);
   out_command[SERVO4] = 1.5*pitch_PID + subTrim3;
 
 }
+
 
 void out_KillSwitchAndFailsafe() {
   static bool rcin_armed_prev = false; 
