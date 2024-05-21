@@ -178,8 +178,6 @@ float Kp_yaw         = 0.3;       //Yaw P-gain
 float Ki_yaw         = 0.05;      //Yaw I-gain
 float Kd_yaw         = 0.00015;   //Yaw D-gain (be careful when increasing too high, motors will begin to overheat!)
 
-float thro_PID = 0.5;
-
 float transitionFadeValue = 0;    //Faktor for control mixer 
 float tohoverFadeSpeed = 0.001;
 float toplaneFadeSpeed = 0.001;
@@ -206,7 +204,7 @@ float AccX, AccY, AccZ, GyroX, GyroY, GyroZ, MagX, MagY, MagZ; //corrected and f
 float ahrs_roll, ahrs_pitch, ahrs_yaw;  //ahrs_Madgwick() estimate output in degrees. Positive angles are: roll right, yaw right, pitch up
 
 //Controller:
-float roll_PID = 0, pitch_PID = 0, yaw_PID = 0;
+float roll_PID = 0, pitch_PID = 0, yaw_PID = 0, thro_PID=0;
 
 //Flight status
 bool out_armed = false; //motors will only run if this flag is true
@@ -256,6 +254,8 @@ const float ki = 0.01;  // Integral gain
 const float kd = 0.05;  // Derivative gain
 
 void altholdSetup() {
+  baro.setup();
+  delay(100);
   altitudeBarometer = 0;  // Reset initial altitude accumulator
   for (int i = 0; i < 2000; i++) {
     baro.update();
@@ -318,7 +318,8 @@ float getAlt() {
   return filteredAltitude;
 }
 
-float holdAlt(float inputThro) {
+void holdAlt() {
+  float inputThro = rcin_thro;
   unsigned long currentTime = millis();
   float currentAltitude = getAlt();
   unsigned long elapsedTime = currentTime - lastTime;  // Time in milliseconds
@@ -346,7 +347,6 @@ float holdAlt(float inputThro) {
     float wantedVerticalVelo = 4.0 * inputThro - 2.0;
     float error = wantedVerticalVelo - filteredVelocity;
     thro_PID = constrain(0.33 + error * 0.2, 0.0, 1.0);
-    return thro_PID;
   }
 }
 void setup() {
@@ -379,7 +379,6 @@ void setup() {
   B_gyro = lowpass_to_beta(LP_gyro, imu.getSampleRate());
   B_mag = lowpass_to_beta(LP_mag, imu.getSampleRate());
   B_radio = lowpass_to_beta(LP_radio, imu.getSampleRate());
-  baro.setup();
   mag.setup(); //External Magnetometer
   bat.setup(); //Battery Monitor
   bb.setup(); //Black Box
@@ -389,7 +388,6 @@ void setup() {
   //Servos (set servos first just in case motors overwrite frequency of shared timers)
   for(int i=out_MOTOR_COUNT;i<HW_OUT_COUNT;i++) {
     out[i].begin(HW_PIN_OUT[i], 50, 800, 2400); //Standard servo at 50Hz
-
     out_command[i] = 0; //keep at 0 if you are using servo outputs for motors
     out[i].writeFactor(out_command[i]); //start the PWM output to the servos
   } 
@@ -410,7 +408,6 @@ void setup() {
   //set quarterion to initial yaw, so that AHRS settles faster
   altholdSetup();
   ahrs_Setup();
-  Serial.println("ahrsSetupDone");
   //start IMU update handler - do this last in setup(), as the handler needs all modules configured
   imu.onUpdate = imu_onUpdate;
   if(!imu.waitNewSample()) die("IMU interrupt not firing.");
@@ -482,7 +479,7 @@ void imu_onUpdate() {
   control_Angle(rcin_thro_is_low); //Stabilize on pitch/roll angle setpoint, stabilize yaw on rate setpoint
   //control_Angle2(rcin_thro_is_low); //Stabilize on pitch/roll setpoint using cascaded method. Rate controller must be tuned well first!
   //control_Rate(rcin_thro_is_low); //Stabilize on rate setpoint
-
+  holdAlt();
   //Actuator mixing
   control_Mixer(); //Mixes PID outputs to scaled actuator commands -- custom mixing assignments done here
 
@@ -830,15 +827,13 @@ void control_Mixer() {
     }
   }
 
-  float thro_PIDT = holdAlt(rcin_thro);
-  // mixing Motors
-  out_command[MOTOR1] = rcin_thro + transitionFadeValue*(roll_PID + pitch_PID + thro_PIDT) + (1-transitionFadeValue)*yaw_PID;
-  out_command[MOTOR2] = rcin_thro - transitionFadeValue*(roll_PID + pitch_PID + thro_PIDT) - (1-transitionFadeValue)*yaw_PID;
+  out_command[MOTOR1] =  transitionFadeValue*(roll_PID + pitch_PID + thro_PID) + (1-transitionFadeValue)*(yaw_PID+rcin_thro);
+  out_command[MOTOR2] = - transitionFadeValue*(roll_PID + pitch_PID + thro_PID) - (1-transitionFadeValue)*(yaw_PID+rcin_thro);
   
 
   //mixing Servos
   if(out_armed) {
-      out_command[SERVO1] = (thro_PIDT-pitch_PID*3)*transitionFadeValue;
+      out_command[SERVO1] = (thro_PID-pitch_PID*3)*transitionFadeValue;
   }else{
       out_command[SERVO1] = 0;
   }
