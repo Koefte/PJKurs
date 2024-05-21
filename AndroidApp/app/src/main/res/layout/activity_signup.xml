@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/signup"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_default"
+    tools:context=".SignUpActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/panel_margin"
+
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+
+        android:background="@drawable/radius"
+        android:padding="@dimen/panel_margin"
+        tools:layout_editor_absoluteX="20dp"
+        tools:layout_editor_absoluteY="20dp">
+
+        <View
+            style="@style/icon_view"
+
+            android:layout_margin="@dimen/icon_margin"
+
+            android:background="@drawable/baseline_account_circle_24"
+        />
+
+        <TextView
+            style="@style/standard_text"
+
+            android:text="@string/title_signup"
+            android:textSize="@dimen/font_size_header2"
+            />
+
+        <TextView
+            style="@style/standard_text"
+
+            android:paddingTop="@dimen/topic_split_margin_top"
+
+            android:text="@string/text_input_username"
+            />
+
+        <EditText
+            android:id="@+id/signup_input_username"
+
+            style="@style/wrap_content_style"
+
+            android:layout_width="@dimen/input_text_width"
+            android:backgroundTint="@color/white"
+
+            android:textColor="@color/white"
+            android:inputType="textEmailAddress"
+            android:textAlignment="center"
+            />
+
+        <TextView
+            style="@style/standard_text"
+
+            android:paddingTop="@dimen/topic_split_margin_top_small"
+
+            android:text="@string/text_input_email"
+            />
+
+        <EditText
+            android:id="@+id/signup_input_email"
+
+            style="@style/wrap_content_style"
+
+            android:layout_width="@dimen/input_text_width"
+            android:backgroundTint="@color/white"
+
+            android:textColor="@color/white"
+            android:inputType="textEmailAddress"
+            android:textAlignment="center"
+            />
+
+        <TextView
+            style="@style/standard_text"
+
+            android:paddingTop="@dimen/topic_split_margin_top_small"
+
+            android:text="@string/text_input_password"
+            />
+
+        <EditText
+            android:id="@+id/signup_input_password"
+
+            style="@style/wrap_content_style"
+
+            android:layout_width="@dimen/input_text_width"
+            android:backgroundTint="@color/white"
+
+            android:textColor="@color/white"
+            android:inputType="textPassword"
+            android:textAlignment="center"
+            />
+
+        <TextView
+            style="@style/standard_text"
+
+            android:paddingTop="@dimen/topic_split_margin_top_small"
+
+            android:text="@string/text_input_password_2"
+            />
+
+        <EditText
+            android:id="@+id/signup_input_repeat_password"
+
+            style="@style/wrap_content_style"
+
+            android:layout_width="@dimen/input_text_width"
+            android:backgroundTint="@color/white"
+
+            android:textColor="@color/white"
+            android:inputType="textPassword"
+            android:textAlignment="center"
+            />
+
+        <Button
+            android:id="@+id/signup_input_button"
+
+            style="@style/wrap_content_style"
+
+            android:layout_marginTop="@dimen/topic_split_margin_top"
+
+            android:text="@string/text_button_signup"
+            android:background="@drawable/button_rounded"
+            />
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

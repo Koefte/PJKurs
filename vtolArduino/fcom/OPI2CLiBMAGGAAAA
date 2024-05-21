@@ -1,0 +1,26 @@
+#include <GPSHelper.h>
+#include <ListLibrary.h>
+
+#define GPS_RX_PIN 16
+#define GPS_TX_PIN 17
+
+Verwaltung<float[]> ListVerwaltung;
+GPSHelper gpsHelper(GPS_RX_PIN, GPS_TX_PIN);
+
+
+
+bool flightState = false; //false for Disarmed, true for armed
+
+
+void setup() {
+  gpsHelper.begin();
+  Serial.begin(115200);
+}
+
+void loop() {
+  if(!flightState){ //code for preparing for flight
+      
+  }else{            //code to control flight
+
+  }
+}

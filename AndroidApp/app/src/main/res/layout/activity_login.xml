@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/login"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_default"
@@ -40,11 +40,11 @@
 
             android:paddingTop="80dp"
 
-            android:text="@string/text_input_username"
+            android:text="@string/text_input_email"
             />
 
         <EditText
-            android:id="@+id/login_input_username"
+            android:id="@+id/login_input_email"
 
             style="@style/wrap_content_style"
 
@@ -52,7 +52,7 @@
             android:backgroundTint="@color/white"
 
             android:textColor="@color/white"
-            android:inputType="textNoSuggestions"
+            android:inputType="textEmailAddress"
             android:textAlignment="center"
             />
 
