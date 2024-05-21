@@ -16,7 +16,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/background_default"
+
             app:layout_constraintBottom_toBottomOf="parent"
+            app:itemTextColor="@drawable/bot_nav_bar_selector"
+            app:itemIconTint="@drawable/bot_nav_bar_selector"
+            app:labelVisibilityMode="labeled"
             app:menu="@menu/bottom_nav_menu" />
 
         <FrameLayout
