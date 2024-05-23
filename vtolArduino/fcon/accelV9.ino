@@ -251,17 +251,22 @@ void loop1() {
 //========================================================================================================================//
 //                                                       SETUP()                                                          //
 //========================================================================================================================//
-float sealevelBaro = 1013.25;
-const int smoothoutValue = 30;  // Size of the array for altitude and velocity smoothing
+float AccZInertial=0,verticalVelocityACC=0,lastAltitudeBarometer=0,verticalVelocityBARO=0;
+float AltitudeBarometer,B;
+unsigned long lastTime = 0;        // Last time in milliseconds
+const int smoothoutValue = 100;  // Size of the array for altitude and velocity smoothing
 float altitudes[smoothoutValue];   // Array to store altitude values
 float velocities[smoothoutValue];  // Array to store velocity values
 int altIndex = 0;                  // Index to keep track of the current position in the altitude array
-int velIndex = 0;                  // Index to keep track of the current position in the velocity array
+int velIndex = 0;
 
-unsigned long lastTime = 0;        // Last time in milliseconds
-float lastAltitude = 0;            // Last altitude in meters
-const unsigned long interval = 1000 / 50; // Interval for 60 times per second
 
+void holdAlt() 
+    AccZInertial=-sin(ahrs_pitch*(3.142/180))*AccX+cos(ahrs_pitch*(3.142/180))*sin(ahrs_roll*(3.142/180))* AccY+cos(ahrs_pitch*(3.142/180))*cos(ahrs_roll*(3.142/180))*AccZ;   
+    AccZInertial=(AccZInertial-1)*9.81*100;
+    verticalVelocityACC = verticalVelocityACC + AccZInertial*0.004;
+    Serial.println(verticalVelocityACC);
+}
 float storeAndCalculateAverage(float newValue, float* array, int& index) {
   float weight = 1;
   // Store the new value in the array
@@ -275,28 +280,6 @@ float storeAndCalculateAverage(float newValue, float* array, int& index) {
   weight = (abs(sum/smoothoutValue) - abs(newValue))*(abs(sum/smoothoutValue) - abs(newValue))*(abs(sum/smoothoutValue) - abs(newValue));
   array[index] = newValue*weight*0.5;
   return sum / smoothoutValue;
-}
-void holdAlt() {
-  unsigned long currentTime = millis();
-  if (currentTime - lastTime >= interval) {
-    baro.update();
-    float currentAltitude = storeAndCalculateAverage(44330 * (1 - pow(baro.press_pa / sealevelBaro, 1 / 5.255)), altitudes, altIndex);
-    unsigned long elapsedTime = currentTime - lastTime;  // Time in milliseconds
-
-    float verticalVelocity = 0;
-    if (elapsedTime > 0) {
-      verticalVelocity = (currentAltitude - lastAltitude) / (elapsedTime / 1000.0);
-    }
-
-    float avgVelocity = storeAndCalculateAverage(verticalVelocity, velocities, velIndex);
-    // Update the last time and last altitude for the next calculation
-    lastTime = currentTime;
-    lastAltitude = currentAltitude;
-    float changeInput = rcin_thro - 0.5;
-    float error = changeInput - constrain(avgVelocity*0.2,-0.3,0.3);
-    thro_PID = 0.4 + error*0.5;
-    Serial.println(thro_PID);
-  }
 }
 void setup() {
   led.setup(HW_PIN_LED, HW_LED_ON); //Set built in LED to turn on to signal startup
