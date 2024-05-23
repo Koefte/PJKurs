@@ -11,7 +11,7 @@ function hasAllKeys(objToCheck, keysObj) {
   return Object.keys(keysObj).every(key => objToCheck.hasOwnProperty(key));
 }
 
-function getNameById(id){
+function getEmailById(id){
   let sessionData = JSON.parse(fs.readFileSync('ids.json', 'utf-8'));
   console.log(sessionData)
   for(let data of sessionData){
@@ -20,6 +20,12 @@ function getNameById(id){
   return null
 }
 
+function getHardwareIdByUser(user){
+  let stationsTable = JSON.parse(fs.readFileSync('stations.json', 'utf-8'));
+  for(let entry in stationsTable){
+    if(entry.user == user) return entry.hardwareID
+  } 
+}
 
 
 app.use(bodyParser.json());
@@ -43,10 +49,16 @@ const hardwareID = {
   hardwareID:100
 }
 
+const station = {
+  hardwareID:100,
+  sessionID:100
+}
+
 const requestA = {
   sessionID: 100,
   receiver: "max@gmail.com"
 }
+
 
 const requestB = {
   sessionID: 100,
@@ -55,26 +67,54 @@ const requestB = {
   geoString:"23N123O",
 }
 
+app.post('/api/stations',(req,res) => {
+  const requestData = req.body;
+  if(hasAllKeys(requestData,station)){
+    const userEmail = getEmailById(requestData.sessionID)
+    let stationsTable = JSON.parse(fs.readFileSync('stations.json', 'utf-8'));
+    stationsTable.push({user:userEmail,station:hardwareID})
+    fs.writeFileSync('stations.json', JSON.stringify(stationsTable, null, 2), 'utf-8');
+    res.status(200).json({message:"Succesfully created the station"})
+    return
+  }
+  res.status(400).json({message:"Wrong format"})
+})
+
+app.get('/api/stations',(req,res) => {
+  const requestData = req.body;
+  if(hasAllKeys(requestData,session)){
+    const userEmail = getEmailById(requestData.sessionID)
+    let stationsTable = JSON.parse(fs.readFileSync('stations.json', 'utf-8'));
+    let station;
+    for(let entry in stationsTable){
+      if(entry.user == userEmail) station = entry.hardwareID
+    }   
+    res.status(200).json({station:station})
+    return
+  }
+  res.status(400).json({message:"Wrong format"})
+})
+
 app.post('/api/requests',(req,res) => {
   const requestData = req.body;
   if(hasAllKeys(requestData,requestA)){
-    const senderEmail = getNameById(requestData.sessionID)
+    const senderEmail = getEmailById(requestData.sessionID)
     let requestTable = JSON.parse(fs.readFileSync('requests.json', 'utf-8'));
     requestTable.push({sender:senderEmail,receiver:requestData.receiver,accepted:false})
     fs.writeFileSync('requests.json', JSON.stringify(requestTable, null, 2), 'utf-8');
-    res.status(200).json({message:"Succesfully created the request"})
+    res.status(200).json({message:"Succesfully created the request A"})
     return
   }
   else if(hasAllKeys(requestData,requestB)){
-    const senderEmail = getNameById(requestData.sessionID)
+    const senderEmail = getEmailById(requestData.sessionID)
     let requestTable = JSON.parse(fs.readFileSync('requests.json', 'utf-8'));
-    requestTable.push({sender:senderEmail,receiver:requestData.receiver,hardwareID:requestData.hardwareID,geoString:requestData.geoString})
+    requestTable.push({sender:senderEmail,receiver:requestData.receiver,geoString:requestData.geoString})
     fs.writeFileSync('requests.json', JSON.stringify(requestTable, null, 2), 'utf-8');
-    res.status(200).json({message:"Succesfully created the request"})
+    res.status(200).json({message:"Succesfully created the request B"})
     return
   }
   else if(hasAllKeys(requestData,session)){
-    const receiverEmail = getNameById(requestData.sessionID)
+    const receiverEmail = getEmailById(requestData.sessionID)
     let requestTable = JSON.parse(fs.readFileSync('requests.json', 'utf-8'));
     for(let request of requestTable){
       if(request.receiver == receiverEmail && request.accepted != undefined) request.accepted = true
@@ -89,7 +129,7 @@ app.post('/api/requests',(req,res) => {
 app.get('/api/requests',(req,res) => {
   const requestData = req.body;
   if(hasAllKeys(requestData,session)){
-    const clientEmail = getNameById(requestData.sessionID)
+    const clientEmail = getEmailById(requestData.sessionID)
     let requestTable = JSON.parse(fs.readFileSync('requests.json', 'utf-8'));
     let incomingRequests = []
     let outgoingRequests = []
@@ -103,11 +143,12 @@ app.get('/api/requests',(req,res) => {
   }
   else if(hasAllKeys(requestData,hardwareID)){
     let requestTable = JSON.parse(fs.readFileSync('requests.json', 'utf-8'));
-    let requests = []
+    let coords = []
+    let user = getHardwareIdByUser(req.sender)
     for(let req of requestTable){
-      if(req.hardwareID == requestData.hardwareID) requests.push(req)
+      if(req.sender == user) coords.push(req.geoString)
     }
-    res.status(200).json({requests:requests})
+    res.status(200).json({coords:coords})
     return
   }
   res.status(400).json({message:"Wrong format"})
