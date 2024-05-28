@@ -1,5 +1,6 @@
 package de.anbeli.dronedelivery;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -19,7 +20,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import de.anbeli.dronedelivery.databinding.ActivityMainBinding;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements IMenu{
 
     ActivityMainBinding binding;
 
@@ -48,6 +49,20 @@ public class MainActivity extends AppCompatActivity {
 
             return true;
         });
+
+        update_menu();
+    }
+
+    public void update_menu() {
+        boolean drone_management = getSharedPreferences("save_data", MODE_PRIVATE).getBoolean("drone_management", false);
+
+        if(drone_management) {
+            binding.bottomNavigationView.getMenu().getItem(0).setVisible(true);
+            binding.bottomNavigationView.getMenu().getItem(2).setVisible(true);
+        } else {
+            binding.bottomNavigationView.getMenu().getItem(0).setVisible(false);
+            binding.bottomNavigationView.getMenu().getItem(2).setVisible(false);
+        }
     }
 
     private void replace_fragment(Fragment fragment) {

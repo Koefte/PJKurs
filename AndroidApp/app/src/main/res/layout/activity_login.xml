@@ -25,8 +25,7 @@
 
             android:layout_margin="@dimen/icon_margin"
 
-            android:background="@drawable/baseline_account_circle_24"
-        />
+            android:background="@drawable/baseline_account_circle_24" />
 
         <TextView
             style="@style/standard_text"

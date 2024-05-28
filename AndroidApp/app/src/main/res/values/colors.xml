@@ -5,4 +5,5 @@
     <color name="background_default">#1B2320</color>
     <color name="active_default">#CCD083</color>
     <color name="panel_default">#374943</color>
+    <color name="deselect_gray">#9C9C9C</color>
 </resources>
