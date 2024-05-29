@@ -20,10 +20,10 @@ function getEmailById(id){
   return null
 }
 
-function getHardwareIdByUser(user){
+function getUserByHardwareId(id){
   let stationsTable = JSON.parse(fs.readFileSync('stations.json', 'utf-8'));
   for(let entry in stationsTable){
-    if(entry.user == user) return entry.hardwareID
+    if(entry.hardwareID == id) return entry.user
   } 
 }
 
@@ -144,7 +144,7 @@ app.get('/api/requests',(req,res) => {
   else if(hasAllKeys(requestData,hardwareID)){
     let requestTable = JSON.parse(fs.readFileSync('requests.json', 'utf-8'));
     let coords = []
-    let user = getHardwareIdByUser(req.sender)
+    let user = getUserByHardwareId(requestData.hardwareID)
     for(let req of requestTable){
       if(req.sender == user) coords.push(req.geoString)
     }
