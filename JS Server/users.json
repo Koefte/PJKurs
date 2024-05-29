@@ -14,5 +14,10 @@
     "contacts": [
       "john@example.com"
     ]
+  },
+  {
+    "name": "anbeli",
+    "email": "anbeli260906@gmail.com",
+    "passwort": "password"
   }
 ]

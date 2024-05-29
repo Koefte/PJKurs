@@ -18,8 +18,8 @@
             android:background="@color/background_default"
 
             app:layout_constraintBottom_toBottomOf="parent"
-            app:itemTextColor="@drawable/bot_nav_bar_selector"
-            app:itemIconTint="@drawable/bot_nav_bar_selector"
+            app:itemTextColor="@color/bot_nav_bar_selector"
+            app:itemIconTint="@color/bot_nav_bar_selector"
             app:labelVisibilityMode="labeled"
             app:menu="@menu/bottom_nav_menu" />
 

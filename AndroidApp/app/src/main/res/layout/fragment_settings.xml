@@ -1,12 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ContactFragment">
 
     <TextView
+        style="@style/standard_text"
+        android:id="@+id/title_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_settings"
+        android:textSize="@dimen/font_size_header2"
+
+        android:layout_margin="@dimen/topic_split_margin_top"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/settings_drone_switch"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="moinsen"/>
-</FrameLayout>
+        android:layout_height="wrap_content"
+        android:text="@string/text_switch_settings_has_drone"
+
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_size_standard"
+
+        app:thumbTint="@color/switch_thumb_selector"
+        app:trackTint="@color/switch_track_selector"
+
+        android:layout_margin="@dimen/topic_split_margin_top"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_settings" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
