@@ -202,7 +202,7 @@ float subTrim1=0.3;                   //levelout servo1
 float subTrim2=0.7;                   //levelout servo2
 float subTrim3=0.8;       
 float subTrim4=0.2;   
-float subTrim5;   
+float subTrim5=0.4;   
 //========================================================================================================================//
 //                              DECLARE GLOBAL VARIABLES                                                                  //
 //========================================================================================================================//
@@ -234,7 +234,7 @@ const float rad_to_deg = 57.29577951; //radians to degrees conversion constant
 //========================================================================================================================//
 //Note: most madflight modules are header only. By placing the madflight include here allows the modules to access the global variables without declaring them extern.
 #include <madflight.h>
-
+#include "altitude_kf.h"
 //========================================================================================================================//
 //                  SETUP1() LOOP1() EXECUTING ON SECOND CORE (only for dual core MCUs like ESP32 and RP2040)             //
 //========================================================================================================================//
@@ -251,21 +251,26 @@ void loop1() {
 //========================================================================================================================//
 //                                                       SETUP()                                                          //
 //========================================================================================================================//
-float AccZInertial=0,verticalVelocityACC=0,lastAltitudeBarometer=0,verticalVelocityBARO=0;
-float AltitudeBarometer,B;
+float AccZInertial=0,EARTH_GRAVITY=9.81;
+float AltitudeBarometer,AltitudeBarometerINT;
 unsigned long lastTime = 0;        // Last time in milliseconds
 const int smoothoutValue = 100;  // Size of the array for altitude and velocity smoothing
 float altitudes[smoothoutValue];   // Array to store altitude values
 float velocities[smoothoutValue];  // Array to store velocity values
 int altIndex = 0;                  // Index to keep track of the current position in the altitude array
 int velIndex = 0;
+Altitude_KF alt_estimator(0.0000002f, 0.1f);  // Example covariance values for Q_accel and R_altitude
 
-
-void holdAlt() 
+void holdAlt() {
+    baro.update();
+    unsigned long currentTime = millis();
+    unsigned long elapsedTime = currentTime - lastTime;  // Time in milliseconds
     AccZInertial=-sin(ahrs_pitch*(3.142/180))*AccX+cos(ahrs_pitch*(3.142/180))*sin(ahrs_roll*(3.142/180))* AccY+cos(ahrs_pitch*(3.142/180))*cos(ahrs_roll*(3.142/180))*AccZ;   
-    AccZInertial=(AccZInertial-1)*9.81*100;
-    verticalVelocityACC = verticalVelocityACC + AccZInertial*0.004;
-    Serial.println(verticalVelocityACC);
+    AccZInertial=storeAndCalculateAverage((AccZInertial-1)*9.81,velocities,velIndex);
+    AltitudeBarometer = storeAndCalculateAverage(44330 * (1 - pow(baro.press_pa / 1013.25, 1 / 5.255)),altitudes,altIndex) + 61586.16;
+    alt_estimator.propagate(AccZInertial, elapsedTime);
+    alt_estimator.update(AltitudeBarometer);
+    //Serial.println(alt_estimator.v);
 }
 float storeAndCalculateAverage(float newValue, float* array, int& index) {
   float weight = 1;
@@ -311,7 +316,6 @@ void setup() {
   B_gyro = lowpass_to_beta(LP_gyro, imu.getSampleRate());
   B_mag = lowpass_to_beta(LP_mag, imu.getSampleRate());
   B_radio = lowpass_to_beta(LP_radio, imu.getSampleRate());
-
   baro.setup(); //Barometer
   mag.setup(); //External Magnetometer
   bat.setup(); //Battery Monitor
@@ -342,7 +346,6 @@ void setup() {
 
   //set quarterion to initial yaw, so that AHRS settles faster
   ahrs_Setup();
-
   //start IMU update handler - do this last in setup(), as the handler needs all modules configured
   imu.onUpdate = imu_onUpdate;
   if(!imu.waitNewSample()) die("IMU interrupt not firing.");
@@ -758,25 +761,25 @@ void control_Mixer() {
     //Serial.println("Binary Switch: 0.0");
     //Serial.print("fadedValue");
     //Serial.println(transitionFadeValue);
-    if(transitionFadeValue>0+toplaneFadeSpeed){
+    if(transitionFadeValue>0.5+toplaneFadeSpeed){
       transitionFadeValue=transitionFadeValue-toplaneFadeSpeed;
     }
   }
 
-  out_command[MOTOR1] = transitionFadeValue*thro_PID +(1-transitionFadeValue)*rcin_thro - transitionFadeValue*(roll_PID + pitch_PID) - (1-transitionFadeValue)*(yaw_PID*0.5);
-  out_command[MOTOR2] = transitionFadeValue*thro_PID +(1-transitionFadeValue)*rcin_thro + transitionFadeValue*(roll_PID + pitch_PID) + (1-transitionFadeValue)*(yaw_PID*0.5);
+  out_command[MOTOR1] = transitionFadeValue*rcin_thro +(1-transitionFadeValue)*rcin_thro - transitionFadeValue*(roll_PID + pitch_PID) - (1-transitionFadeValue)*(yaw_PID*0.5);
+  out_command[MOTOR2] = transitionFadeValue*rcin_thro +(1-transitionFadeValue)*rcin_thro + transitionFadeValue*(roll_PID + pitch_PID) + (1-transitionFadeValue)*(yaw_PID*0.5);
   
 
   //mixing Servos
   if(out_armed) {
-      out_command[SERVO1] = (thro_PID-pitch_PID*3)*transitionFadeValue;
+      out_command[SERVO1] = (rcin_thro-pitch_PID*3)*transitionFadeValue;
   }else{
       out_command[SERVO1] = 0;
   }
   
   out_command[SERVO2] = (transitionFadeValue*(yaw_PID*0.5+subTrim3)) + (1-transitionFadeValue)*(-roll_PID*4+subTrim1) ;
   out_command[SERVO3] = (transitionFadeValue*(yaw_PID*0.5+subTrim4)) + (1-transitionFadeValue)*(-roll_PID*4+subTrim2);
-  out_command[SERVO4] = 1.5*pitch_PID + subTrim3;
+  out_command[SERVO4] = constrain(2.5*pitch_PID + subTrim5,0.05,0.95);
 
 }
 
