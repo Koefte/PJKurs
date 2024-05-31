@@ -1,9 +1,6 @@
-package de.anbeli.dronedelivery;
+package de.anbeli.dronedelivery.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,14 +10,16 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
+import de.anbeli.dronedelivery.IMenu;
+import de.anbeli.dronedelivery.R;
 import de.anbeli.dronedelivery.databinding.ActivityMainBinding;
+import de.anbeli.dronedelivery.fragment.ContactFragment;
+import de.anbeli.dronedelivery.fragment.DeliveryFragment;
+import de.anbeli.dronedelivery.fragment.DroneFragment;
+import de.anbeli.dronedelivery.fragment.SettingsFragment;
 
-public class MainActivity extends AppCompatActivity implements IMenu{
+public class MainActivity extends AppCompatActivity implements IMenu {
 
     ActivityMainBinding binding;
 

@@ -1,5 +1,6 @@
-package de.anbeli.dronedelivery;
+package de.anbeli.dronedelivery.util;
 
+import static android.content.Context.MODE_PRIVATE;
 import static java.lang.System.out;
 
 import org.json.JSONException;
@@ -14,6 +15,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import android.content.Context;
 import android.content.SharedPreferences;
 
 
@@ -105,5 +108,12 @@ public class DatabaseConnector {
         };
 
         mExecutor.execute(backgroundRunnable);
+    }
+
+    public static void save_session_id(Context c) {
+        SharedPreferences.Editor e = c.getSharedPreferences("save_data", MODE_PRIVATE).edit();
+        e.putInt("session_id", DatabaseConnector.session_id);
+        e.apply();
+        System.out.println("put sessionID " + DatabaseConnector.session_id);
     }
 }

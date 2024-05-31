@@ -19,6 +19,7 @@
 
     <string name="text_button_login">Log In</string>
     <string name="text_button_signup">Sign Up</string>
+    <string name="text_button_logout">Log out</string>
 
     <string name="hello_blank_fragment">subject to change</string>
 

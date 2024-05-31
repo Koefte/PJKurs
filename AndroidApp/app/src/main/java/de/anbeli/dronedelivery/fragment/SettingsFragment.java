@@ -1,22 +1,31 @@
-package de.anbeli.dronedelivery;
+package de.anbeli.dronedelivery.fragment;
 
 import static android.content.Context.MODE_PRIVATE;
 
-import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
+import de.anbeli.dronedelivery.activities.LoginActivity;
+import de.anbeli.dronedelivery.activities.MainActivity;
+import de.anbeli.dronedelivery.R;
+import de.anbeli.dronedelivery.activities.SignUpActivity;
+import de.anbeli.dronedelivery.util.DatabaseConnector;
+
 public class SettingsFragment extends Fragment {
 
     SwitchMaterial drone_switch;
+    Button sign_off_button;
     View v;
     Context c;
     @Override
@@ -25,6 +34,7 @@ public class SettingsFragment extends Fragment {
         c = v.getContext();
 
         drone_switch = v.findViewById(R.id.settings_drone_switch);
+        sign_off_button = v.findViewById(R.id.sign_off_button);
 
         set_listeners();
 
@@ -41,5 +51,16 @@ public class SettingsFragment extends Fragment {
             ((MainActivity) getActivity()).update_menu();
         });
 
+        sign_off_button.setOnClickListener(v -> {
+            sign_off();
+        });
+    }
+
+    private void sign_off() {
+        DatabaseConnector.session_id = -1;
+        DatabaseConnector.save_session_id(c);
+
+        Intent myIntent = new Intent(c, LoginActivity.class);
+        startActivity(myIntent);
     }
 }
