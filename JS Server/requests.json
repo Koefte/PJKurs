@@ -1,2 +1,7 @@
 [
+{
+    "sender": "john@example.com",
+    "receiver": "anbeli260906@gmail.com",
+    "geoString": "51.123456,4.567890"
+  }
 ]

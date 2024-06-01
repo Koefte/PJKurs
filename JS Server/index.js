@@ -22,7 +22,7 @@ function getEmailById(id){
 
 function getUserByHardwareId(id){
   let stationsTable = JSON.parse(fs.readFileSync('stations.json', 'utf-8'));
-  for(let entry in stationsTable){
+  for(let entry of stationsTable){
     if(entry.hardwareID == id) return entry.user
   } 
 }
@@ -66,6 +66,14 @@ const requestB = {
   hardwareID:100,
   geoString:"23N123O",
 }
+
+let requestTable = JSON.parse(fs.readFileSync('./requests.json', 'utf-8'));
+let coords = []
+let user = getUserByHardwareId(100)
+for(let req of requestTable){
+  if(req.sender == user) coords.push(req.geoString)
+}
+
 
 app.post('/api/stations',(req,res) => {
   const requestData = req.body;

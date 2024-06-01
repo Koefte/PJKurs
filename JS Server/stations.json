@@ -1,1 +1,6 @@
-[]
+[
+    {
+        "hardwareID":100,
+        "user":"john@example.com"
+    }
+]
