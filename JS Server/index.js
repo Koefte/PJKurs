@@ -123,6 +123,16 @@ app.post('/api/requests',(req,res) => {
     res.status(200).json({message:"Succesfully accepted the request"})
     return
   }
+  else if(hasAllKeys(requestData,hardwareID)){
+    let requestTable = JSON.parse(fs.readFileSync('requests.json', 'utf-8'));
+    let coords = []
+    let user = getUserByHardwareId(requestData.hardwareID)
+    for(let req of requestTable){
+      if(req.sender == user) coords.push(req.geoString)
+    }
+    res.status(200).json({coords:coords})
+    return
+  }
   res.status(400).json({message:"Wrong format"})
 })
 
@@ -141,16 +151,7 @@ app.get('/api/requests',(req,res) => {
     res.status(200).json({out:outgoingRequests,in:incomingRequests})
     return
   }
-  else if(hasAllKeys(requestData,hardwareID)){
-    let requestTable = JSON.parse(fs.readFileSync('requests.json', 'utf-8'));
-    let coords = []
-    let user = getUserByHardwareId(requestData.hardwareID)
-    for(let req of requestTable){
-      if(req.sender == user) coords.push(req.geoString)
-    }
-    res.status(200).json({coords:coords})
-    return
-  }
+  
   res.status(400).json({message:"Wrong format"})
 })
 
