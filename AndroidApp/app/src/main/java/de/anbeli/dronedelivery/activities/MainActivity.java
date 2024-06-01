@@ -1,9 +1,6 @@
-package de.anbeli.dronedelivery;
+package de.anbeli.dronedelivery.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,14 +10,16 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
+import de.anbeli.dronedelivery.IMenu;
+import de.anbeli.dronedelivery.R;
 import de.anbeli.dronedelivery.databinding.ActivityMainBinding;
+import de.anbeli.dronedelivery.fragment.contact.ContactFragment;
+import de.anbeli.dronedelivery.fragment.delivery.DeliveryFragment;
+import de.anbeli.dronedelivery.fragment.drone.DroneFragment;
+import de.anbeli.dronedelivery.fragment.settings.SettingsFragment;
 
-public class MainActivity extends AppCompatActivity implements IMenu{
+public class MainActivity extends AppCompatActivity implements IMenu {
 
     ActivityMainBinding binding;
 
@@ -65,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements IMenu{
         }
     }
 
-    private void replace_fragment(Fragment fragment) {
+    public void replace_fragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frameLayout, fragment);

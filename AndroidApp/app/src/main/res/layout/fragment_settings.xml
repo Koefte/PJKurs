@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ContactFragment">
+    tools:context=".fragment.contact.ContactFragment">
 
     <TextView
         style="@style/standard_text"
@@ -37,5 +37,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title_settings" />
+
+    <Button
+        android:id="@+id/sign_off_button"
+        android:layout_margin="@dimen/topic_split_margin_top"
+
+        style="@style/wrap_content_style"
+
+        android:background="@drawable/button_rounded"
+        android:text="@string/text_button_logout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settings_drone_switch" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,6 @@
-package de.anbeli.dronedelivery;
+package de.anbeli.dronedelivery.util;
 
+import static android.content.Context.MODE_PRIVATE;
 import static java.lang.System.out;
 
 import org.json.JSONException;
@@ -14,12 +15,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import android.content.Context;
 import android.content.SharedPreferences;
 
 
 public class DatabaseConnector {
     static ExecutorService mExecutor = Executors.newSingleThreadExecutor();
-    public static final String db_access = "http://10.0.2.2:3001/api/";
+    public static final String db_access = "https://vtol.weylyn.net/api/";
     public static int session_id = -1;
     public interface onTaskFinishListener {
         void on_request_completed(JSONObject res) throws JSONException;
@@ -50,7 +53,7 @@ public class DatabaseConnector {
                 con.disconnect();
                 in.close();
             } catch (Exception e) {
-                System.err.println("Error connecting to " + db_access + url_add);
+                System.err.println("Error connecting to " + db_access + url_add + " Error: " + e.getMessage());
             }
 
             try {
@@ -105,5 +108,12 @@ public class DatabaseConnector {
         };
 
         mExecutor.execute(backgroundRunnable);
+    }
+
+    public static void save_session_id(Context c) {
+        SharedPreferences.Editor e = c.getSharedPreferences("save_data", MODE_PRIVATE).edit();
+        e.putInt("session_id", DatabaseConnector.session_id);
+        e.apply();
+        System.out.println("put sessionID " + DatabaseConnector.session_id);
     }
 }

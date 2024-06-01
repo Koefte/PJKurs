@@ -1,10 +1,12 @@
-package de.anbeli.dronedelivery;
+package de.anbeli.dronedelivery.util;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.widget.TextView;
+
+import de.anbeli.dronedelivery.R;
 
 public class ErrorPopup {
 

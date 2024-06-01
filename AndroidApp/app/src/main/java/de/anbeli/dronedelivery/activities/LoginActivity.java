@@ -1,4 +1,4 @@
-package de.anbeli.dronedelivery;
+package de.anbeli.dronedelivery.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +12,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import de.anbeli.dronedelivery.util.ErrorPopup;
+import de.anbeli.dronedelivery.R;
+import de.anbeli.dronedelivery.util.Util;
+import de.anbeli.dronedelivery.util.DatabaseConnector;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -60,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
                 errorPopup.show();
             } else if(res.getString("message").equals("Exists")) {
                 DatabaseConnector.session_id = res.getInt("sessionID");
-                save_session_id();
+                DatabaseConnector.save_session_id(this);
                 Intent myIntent = new Intent(this, MainActivity.class);
                 startActivity(myIntent);
             }
@@ -77,12 +82,5 @@ public class LoginActivity extends AppCompatActivity {
             Intent myIntent = new Intent(v.getContext(), SignUpActivity.class);
             startActivity(myIntent);
         });
-    }
-
-    void save_session_id() {
-        SharedPreferences.Editor e = getSharedPreferences("save_data", MODE_PRIVATE).edit();
-        e.putInt("session_id", DatabaseConnector.session_id);
-        e.apply();
-        System.out.println("put sessionID " + DatabaseConnector.session_id);
     }
 }

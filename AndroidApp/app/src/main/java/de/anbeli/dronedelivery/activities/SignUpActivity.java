@@ -1,4 +1,4 @@
-package de.anbeli.dronedelivery;
+package de.anbeli.dronedelivery.activities;
 
 import android.os.Bundle;
 import android.view.View;
@@ -11,7 +11,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import static de.anbeli.dronedelivery.ErrorPopup.error_code;
+import static de.anbeli.dronedelivery.util.ErrorPopup.error_code;
+
+import de.anbeli.dronedelivery.util.ErrorPopup;
+import de.anbeli.dronedelivery.R;
+import de.anbeli.dronedelivery.util.Util;
+import de.anbeli.dronedelivery.util.DatabaseConnector;
 
 public class SignUpActivity  extends AppCompatActivity {
     EditText username_inp;
