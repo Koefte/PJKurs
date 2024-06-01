@@ -99,6 +99,7 @@ void loop() {
       state = 1;
       break;
     default:
+      ESP.reboot();
       break;
   }
 }
