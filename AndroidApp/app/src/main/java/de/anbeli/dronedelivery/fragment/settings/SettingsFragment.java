@@ -1,4 +1,4 @@
-package de.anbeli.dronedelivery.fragment;
+package de.anbeli.dronedelivery.fragment.settings;
 
 import static android.content.Context.MODE_PRIVATE;
 

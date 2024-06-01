@@ -21,6 +21,11 @@
     <string name="text_button_signup">Sign Up</string>
     <string name="text_button_logout">Log out</string>
 
+    <string name="text_deliver_state_complete">Completed</string>
+    <string name="text_deliver_state_in_progress">In Progress</string>
+    <string name="text_deliver_state_to_be_delivered">Waiting for Start Orders</string>
+    <string name="text_deliver_state_to_be_confirmed">Waiting for Receiver Confirmation</string>
+
     <string name="hello_blank_fragment">subject to change</string>
 
     <string name="text_switch_settings_has_drone">Enable Drone Management</string>

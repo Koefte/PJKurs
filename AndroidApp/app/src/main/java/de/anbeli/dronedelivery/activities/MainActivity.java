@@ -14,10 +14,10 @@ import androidx.fragment.app.FragmentTransaction;
 import de.anbeli.dronedelivery.IMenu;
 import de.anbeli.dronedelivery.R;
 import de.anbeli.dronedelivery.databinding.ActivityMainBinding;
-import de.anbeli.dronedelivery.fragment.ContactFragment;
-import de.anbeli.dronedelivery.fragment.DeliveryFragment;
-import de.anbeli.dronedelivery.fragment.DroneFragment;
-import de.anbeli.dronedelivery.fragment.SettingsFragment;
+import de.anbeli.dronedelivery.fragment.contact.ContactFragment;
+import de.anbeli.dronedelivery.fragment.delivery.DeliveryFragment;
+import de.anbeli.dronedelivery.fragment.drone.DroneFragment;
+import de.anbeli.dronedelivery.fragment.settings.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity implements IMenu {
 
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements IMenu {
         }
     }
 
-    private void replace_fragment(Fragment fragment) {
+    public void replace_fragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frameLayout, fragment);

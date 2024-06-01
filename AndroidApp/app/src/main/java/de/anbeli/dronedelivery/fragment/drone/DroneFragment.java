@@ -1,4 +1,4 @@
-package de.anbeli.dronedelivery.fragment;
+package de.anbeli.dronedelivery.fragment.drone;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

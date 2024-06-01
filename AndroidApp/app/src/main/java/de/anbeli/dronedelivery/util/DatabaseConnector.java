@@ -22,7 +22,7 @@ import android.content.SharedPreferences;
 
 public class DatabaseConnector {
     static ExecutorService mExecutor = Executors.newSingleThreadExecutor();
-    public static final String db_access = "http://10.0.2.2:3001/api/";
+    public static final String db_access = "https://vtol.weylyn.net/api/";
     public static int session_id = -1;
     public interface onTaskFinishListener {
         void on_request_completed(JSONObject res) throws JSONException;
@@ -53,7 +53,7 @@ public class DatabaseConnector {
                 con.disconnect();
                 in.close();
             } catch (Exception e) {
-                System.err.println("Error connecting to " + db_access + url_add);
+                System.err.println("Error connecting to " + db_access + url_add + " Error: " + e.getMessage());
             }
 
             try {

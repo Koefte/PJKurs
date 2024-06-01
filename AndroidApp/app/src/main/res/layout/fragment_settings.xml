@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.ContactFragment">
+    tools:context=".fragment.contact.ContactFragment">
 
     <TextView
         style="@style/standard_text"
