@@ -89,7 +89,7 @@ void getGoeString(){
 
 
 void convertGeoString(String response){
-  // Find the position of the coordinates array in the JSON response
+   // Find the position of the coordinates array in the JSON response
   int coordsStart = response.indexOf("[\"");
   int coordsEnd = response.indexOf("\"]", coordsStart);
 
@@ -106,7 +106,7 @@ void convertGeoString(String response){
   Serial.println(coords);
 
   // Parse the coordinates using sscanf
-  sscanf(coords.c_str(), "%f,%f.%d", &latitude, &longitude, &altitude);
+  sscanf(coords.c_str(), "%f,%f,%d", &latitude, &longitude, &altitude);
 
   // Print the parsed values
   Serial.print("Latitude: ");
@@ -164,18 +164,21 @@ void setupESPNOW(){
   state = 3;
 }
 void sendGeoStringESPNOW(){
-  myData.a = latitude;
-  myData.b = longitude;
-  myData.c = altitude;
-  esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *) &myData, sizeof(myData));
+  for (int i = 0; i <= 20; i++) {
+    myData.a = latitude;
+    myData.b = longitude;
+    myData.c = altitude;
+    esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *) &myData, sizeof(myData));
    
-  if (result == ESP_OK) {
-    Serial.println("Sent with success");
+    if (result == ESP_OK) {
+      Serial.println("Sent with success");
+    }
+    else {
+      Serial.println("Error sending the data");
+    }
+    delay(200);
   }
-  else {
-    Serial.println("Error sending the data");
-  }
-  delay(2000);
+  ESP.restart();
 }
 bool connectToWiFi() {
   WiFi.begin(ssid, password);
