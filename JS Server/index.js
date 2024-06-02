@@ -199,8 +199,14 @@ app.post('/api/users', (req, res) => {
     existingData = JSON.parse(existingData)
 
     if(existingData.map(data => JSON.stringify([data.email, data.passwort])).includes(JSON.stringify(Object.values(requestData)))){
-      const sessionID = Math.random() * Date.now();
+      const sessionID = Math.floor(Math.random() * Date.now());
       let sessionData = JSON.parse(fs.readFileSync('ids.json', 'utf-8'));
+      for(let entry of sessionData){
+        if(entry.email == requestData.email) {
+          res.status(400).json({error:"You already have a session id"})
+          return
+        }
+      }
       sessionData.push({
         email:requestData.email,
         sessionID:sessionID
