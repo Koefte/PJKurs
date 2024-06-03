@@ -1,7 +1,6 @@
 package de.anbeli.dronedelivery.data;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +16,11 @@ import de.anbeli.dronedelivery.R;
 public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.DeliveryViewHolder> {
 
     private List<Delivery> delivery_list;
+    Context c;
 
-    public DeliveryAdapter(List<Delivery> delivery_list) {
+    public DeliveryAdapter(List<Delivery> delivery_list, Context c) {
         this.delivery_list = delivery_list;
+        this.c = c;
     }
 
     public class DeliveryViewHolder extends RecyclerView.ViewHolder {
@@ -64,17 +65,16 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.Delive
     }
 
     private String getDeliveryTextState(Delivery.delivery_state state) {
-        return "Heloooo";
-        /*switch(state) {
+        switch(state) {
             case DELIVERY_IN_PROGRESS:
-                return Resources.getSystem().getString(R.string.text_deliver_state_in_progress);
+                return c.getString(R.string.text_deliver_state_in_progress);
             case DELIVERY_COMPLETE:
-                return Resources.getSystem().getString(R.string.text_deliver_state_complete);
+                return c.getString(R.string.text_deliver_state_complete);
             case TO_BE_DELIVERED:
-                return Resources.getSystem().getString(R.string.text_deliver_state_to_be_delivered);
+                return c.getString(R.string.text_deliver_state_to_be_delivered);
             case TO_BE_CONFIRMED:
-                return Resources.getSystem().getString(R.string.text_deliver_state_to_be_confirmed);
+                return c.getString(R.string.text_deliver_state_to_be_confirmed);
         }
-        return null;*/
+        return null;
     }
 }

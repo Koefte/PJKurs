@@ -20,12 +20,33 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/deliveries_recycler_view"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layoutManager="LinearLayoutManager"
+        android:orientation="vertical"
+        android:scrollbars="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title_deliveries" />
+        app:layout_constraintTop_toBottomOf="@+id/title_deliveries">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/new_delivery_button"
+            android:layout_margin="@dimen/topic_split_margin_top"
+
+            android:background="@drawable/button_rounded"
+            android:text="@string/text_button_new_delivery"/>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/deliveries_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title_deliveries" />
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

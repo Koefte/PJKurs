@@ -5,6 +5,7 @@
     <string name="title_drones">Drones</string>
     <string name="title_contacts">Requests</string>
     <string name="title_settings">Settings</string>
+    <string name="title_delivery_creation">New Delivery</string>
 
     <string name="title_login">Log in</string>
     <string name="title_signup">Sign up</string>
@@ -13,6 +14,7 @@
     <string name="text_input_email">Email</string>
     <string name="text_input_password">Password</string>
     <string name="text_input_password_2">Repeat Password</string>
+    <string name="text_input_delivery_email">Receiver Email</string>
 
     <string name="text_password_reset">Forgot your password?</string>
     <string name="text_create_account">Don´t have an Account?</string>
@@ -20,6 +22,7 @@
     <string name="text_button_login">Log In</string>
     <string name="text_button_signup">Sign Up</string>
     <string name="text_button_logout">Log out</string>
+    <string name="text_button_new_delivery">New Delivery</string>
 
     <string name="text_deliver_state_complete">Completed</string>
     <string name="text_deliver_state_in_progress">In Progress</string>
@@ -29,4 +32,5 @@
     <string name="hello_blank_fragment">subject to change</string>
 
     <string name="text_switch_settings_has_drone">Enable Drone Management</string>
+    <string name="text_button_make_delivery_request">Make Delivery Request</string>
 </resources>

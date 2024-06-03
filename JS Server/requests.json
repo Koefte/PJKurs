@@ -1,7 +1,17 @@
 [
-{
+  {
     "sender": "john@example.com",
     "receiver": "anbeli260906@gmail.com",
     "geoString": "51.123456,4.567890"
+  },
+  {
+    "sender": null,
+    "receiver": "hallooo",
+    "accepted": false
+  },
+  {
+    "sender": "anbeli260906@gmail.com",
+    "receiver": "john@example.com",
+    "accepted": false
   }
 ]

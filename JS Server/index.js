@@ -42,7 +42,11 @@ const entry = {
 }
 
 const session = {
-  sessionID: 100,
+  sessionID: 100
+}
+
+const accept = {
+  acceptorSession: 100
 }
 
 const hardwareID = {
@@ -121,8 +125,8 @@ app.post('/api/requests',(req,res) => {
     res.status(200).json({message:"Succesfully created the request B"})
     return
   }
-  else if(hasAllKeys(requestData,session)){
-    const receiverEmail = getEmailById(requestData.sessionID)
+  else if(hasAllKeys(requestData,accept)){
+    const receiverEmail = getEmailById(requestData.acceptorSession)
     let requestTable = JSON.parse(fs.readFileSync('requests.json', 'utf-8'));
     for(let request of requestTable){
       if(request.receiver == receiverEmail && request.accepted != undefined) request.accepted = true
@@ -141,12 +145,7 @@ app.post('/api/requests',(req,res) => {
     res.status(200).json({coords:coords})
     return
   }
-  res.status(400).json({message:"Wrong format"})
-})
-
-app.get('/api/requests',(req,res) => {
-  const requestData = req.body;
-  if(hasAllKeys(requestData,session)){
+  else if(hasAllKeys(requestData,session)){
     const clientEmail = getEmailById(requestData.sessionID)
     let requestTable = JSON.parse(fs.readFileSync('requests.json', 'utf-8'));
     let incomingRequests = []
@@ -159,7 +158,6 @@ app.get('/api/requests',(req,res) => {
     res.status(200).json({out:outgoingRequests,in:incomingRequests})
     return
   }
-  
   res.status(400).json({message:"Wrong format"})
 })
 

@@ -12,23 +12,22 @@ public class Delivery {
     }
     private delivery_state state;
     private String receiver_email;
+    private String geo_string;
 
     public Delivery(String receiver_email, delivery_state state) {
         this.receiver_email = receiver_email;
         this.state = state;
     }
 
+    public Delivery(String receiver_email, delivery_state state, String geo_string) {
+        this.receiver_email = receiver_email;
+        this.state = state;
+        this.geo_string = geo_string;
+    }
+
     public delivery_state get_state() { return state; }
 
     public String get_receiver() { return receiver_email; }
 
-    public static ArrayList<Delivery> createContactsList(int amount) {
-        ArrayList<Delivery> contacts = new ArrayList<Delivery>();
-
-        for (int i = 1; i <= amount; i++) {
-            contacts.add(new Delivery("Test " + i, delivery_state.TO_BE_CONFIRMED));
-        }
-
-        return contacts;
-    }
+    public String get_geo_string() { return geo_string; }
 }

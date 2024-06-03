@@ -22,8 +22,8 @@ import android.content.SharedPreferences;
 
 public class DatabaseConnector {
     static ExecutorService mExecutor = Executors.newSingleThreadExecutor();
-    public static final String db_access = "https://vtol.weylyn.net/api/";
-    public static int session_id = -1;
+    public static final String db_access = "http://10.0.2.2:3001/api/";
+    public static long session_id = -1;
     public interface onTaskFinishListener {
         void on_request_completed(JSONObject res) throws JSONException;
     }
@@ -97,6 +97,7 @@ public class DatabaseConnector {
                 in.close();
 
             } catch (Exception e) {
+                e.printStackTrace();
                 System.err.println("Error connecting to " + db_access + url_add);
             }
 
@@ -112,7 +113,7 @@ public class DatabaseConnector {
 
     public static void save_session_id(Context c) {
         SharedPreferences.Editor e = c.getSharedPreferences("save_data", MODE_PRIVATE).edit();
-        e.putInt("session_id", DatabaseConnector.session_id);
+        e.putLong("session_id", DatabaseConnector.session_id);
         e.apply();
         System.out.println("put sessionID " + DatabaseConnector.session_id);
     }

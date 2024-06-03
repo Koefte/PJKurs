@@ -46,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
 
         set_listeners();
 
-        DatabaseConnector.session_id = getSharedPreferences("save_data", MODE_PRIVATE).getInt("session_id", -1);
+        DatabaseConnector.session_id = getSharedPreferences("save_data", MODE_PRIVATE).getLong("session_id", -1);
         System.out.println("saved session " + DatabaseConnector.session_id);
 
         if(DatabaseConnector.session_id != -1) {
@@ -58,13 +58,15 @@ public class LoginActivity extends AppCompatActivity {
     void onLogin() {
         String login_post_data = Util.build_login_obj_string(email_inp.getText().toString(), password_inp.getText().toString());
 
+        System.out.println("HUH?");
+
         DatabaseConnector.process_async_post_request("users",login_post_data, res -> {
             if(res.getString("message").equals("Doesnt exist")) {
                 System.out.println(res.getString("message"));
                 ErrorPopup errorPopup = new ErrorPopup(this, getString(R.string.login_account_no_exist));
                 errorPopup.show();
             } else if(res.getString("message").equals("Exists")) {
-                DatabaseConnector.session_id = res.getInt("sessionID");
+                DatabaseConnector.session_id = res.getLong("sessionID");
                 DatabaseConnector.save_session_id(this);
                 Intent myIntent = new Intent(this, MainActivity.class);
                 startActivity(myIntent);
