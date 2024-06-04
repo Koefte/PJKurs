@@ -71,13 +71,6 @@ const requestB = {
   geoString:"23N123O",
 }
 
-let requestTable = JSON.parse(fs.readFileSync('./requests.json', 'utf-8'));
-let coords = []
-let user = getUserByHardwareId(100)
-for(let req of requestTable){
-  if(req.sender == user) coords.push(req.geoString)
-}
-
 
 app.post('/api/stations',(req,res) => {
   const requestData = req.body;
