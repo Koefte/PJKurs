@@ -30,4 +30,8 @@ public class Delivery {
     public String get_receiver() { return receiver_email; }
 
     public String get_geo_string() { return geo_string; }
+
+    public String toString() {
+        return "[" + receiver_email + "]";
+    }
 }

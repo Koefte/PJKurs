@@ -1,12 +1,10 @@
-package de.anbeli.dronedelivery.fragment.delivery;
+package de.anbeli.dronedelivery.fragment.request;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,14 +16,11 @@ import de.anbeli.dronedelivery.R;
 import de.anbeli.dronedelivery.activities.MainActivity;
 import de.anbeli.dronedelivery.data.Delivery;
 import de.anbeli.dronedelivery.data.DeliveryAdapter;
+import de.anbeli.dronedelivery.fragment.delivery.DeliveryCreationFragment;
 import de.anbeli.dronedelivery.util.DatabaseConnector;
 import de.anbeli.dronedelivery.util.Util;
 
-public class DeliveryFragment extends Fragment {
-
-    Button new_delivery_btn;
-
-
+public class RequestFragment extends Fragment {
     ArrayList<Delivery> deliveries_list = new ArrayList<>();
     RecyclerView deliveries;
     View v;
@@ -35,8 +30,6 @@ public class DeliveryFragment extends Fragment {
         v = inflater.inflate(R.layout.fragment_delivery, container, false);
         c = v.getContext();
 
-
-        new_delivery_btn = v.findViewById(R.id.new_delivery_button);
         deliveries = v.findViewById(R.id.deliveries_recycler_view);
 
         fetch_deliveries();
@@ -51,9 +44,7 @@ public class DeliveryFragment extends Fragment {
     }
 
     private void set_listeners() {
-        new_delivery_btn.setOnClickListener(v -> {
-            ((MainActivity) getActivity()).replace_fragment(new DeliveryCreationFragment());
-        });
+
     }
 
     private void fetch_deliveries() {

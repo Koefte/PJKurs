@@ -5,13 +5,18 @@
     "geoString": "51.123456,4.567890"
   },
   {
-    "sender": null,
-    "receiver": "hallooo",
+    "sender": "anbeli260906@gmail.com",
+    "receiver": "john@example.com",
     "accepted": false
   },
   {
     "sender": "anbeli260906@gmail.com",
-    "receiver": "john@example.com",
+    "receiver": "anbeli260906@gmail.com",
+    "accepted": false
+  },
+  {
+    "sender": "anbeli260906@gmail.com",
+    "receiver": "jsdgajhd@hsad.de",
     "accepted": false
   }
 ]

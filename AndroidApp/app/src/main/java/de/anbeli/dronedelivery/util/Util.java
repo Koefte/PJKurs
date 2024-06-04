@@ -82,7 +82,7 @@ public class Util {
             for(JSONObject o : deliveries) {
                 String receiver_email = o.getString("receiver");
 
-                if (o.getString("geoString") != null) {
+                if (o.has("geoString")) {
                     parsed.add(new Delivery(receiver_email, Delivery.delivery_state.TO_BE_DELIVERED, o.getString("geoString")));
 
                 } else if(!o.getBoolean("accepted")) {

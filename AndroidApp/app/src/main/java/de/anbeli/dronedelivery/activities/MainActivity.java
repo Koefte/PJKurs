@@ -1,6 +1,5 @@
 package de.anbeli.dronedelivery.activities;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -15,7 +14,7 @@ import androidx.fragment.app.FragmentTransaction;
 import de.anbeli.dronedelivery.IMenu;
 import de.anbeli.dronedelivery.R;
 import de.anbeli.dronedelivery.databinding.ActivityMainBinding;
-import de.anbeli.dronedelivery.fragment.contact.ContactFragment;
+import de.anbeli.dronedelivery.fragment.request.RequestFragment;
 import de.anbeli.dronedelivery.fragment.delivery.DeliveryFragment;
 import de.anbeli.dronedelivery.fragment.drone.DroneFragment;
 import de.anbeli.dronedelivery.fragment.settings.SettingsFragment;
@@ -41,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements IMenu {
             if(menuItem.getItemId() == R.id.nav_deliveries)
                 replace_fragment(new DeliveryFragment());
             else if(menuItem.getItemId() == R.id.nav_contacts)
-                replace_fragment(new ContactFragment());
+                replace_fragment(new RequestFragment());
             else if(menuItem.getItemId() == R.id.nav_drones)
                 replace_fragment(new DroneFragment());
             else if(menuItem.getItemId() == R.id.nav_settings)

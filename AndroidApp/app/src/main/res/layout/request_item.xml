@@ -17,7 +17,7 @@
 
             android:layout_gravity="center_vertical"
             android:layout_margin="@dimen/icon_margin"
-            android:background="@drawable/location_arrow_solid"
+            android:background="@drawable/user_solid"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -33,7 +33,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/delivery_text"
+                android:id="@+id/request_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
@@ -43,7 +43,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/delivery_state_text"
+                android:id="@+id/request_state_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="to be changed"
