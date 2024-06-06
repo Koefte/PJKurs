@@ -12,39 +12,47 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import de.anbeli.dronedelivery.R;
+import de.anbeli.dronedelivery.util.listeners.onRequestClickListener;
 
 public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.DeliveryViewHolder> {
 
     private List<Delivery> delivery_list;
+    private onRequestClickListener listener;
     Context c;
 
-    public DeliveryAdapter(List<Delivery> delivery_list, Context c) {
+    public DeliveryAdapter(List<Delivery> delivery_list, Context c, onRequestClickListener listener) {
         this.delivery_list = delivery_list;
+        this.listener = listener;
         this.c = c;
     }
 
-    public class DeliveryViewHolder extends RecyclerView.ViewHolder {
+
+    public class DeliveryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         public DeliveryViewHolder(@NonNull View itemView) {
             super(itemView);
 
             delivery_text = (TextView) itemView.findViewById(R.id.delivery_text);
             delivery_state_text = (TextView) itemView.findViewById(R.id.delivery_state_text);
+
+            itemView.setOnClickListener(this);
         }
 
         public TextView delivery_text;
         public TextView delivery_state_text;
 
+        @Override
+        public void onClick(View v) {
+            listener.deliveryListItemClicked(v, this.getLayoutPosition());
+        }
     }
     @Override
     public DeliveryAdapter.DeliveryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        // Inflate the custom layout
         View contactView = inflater.inflate(R.layout.delivery_item, parent, false);
 
-        // Return a new holder instance
         DeliveryViewHolder viewHolder = new DeliveryViewHolder(contactView);
         return viewHolder;
     }

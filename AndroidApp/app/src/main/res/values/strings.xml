@@ -2,6 +2,7 @@
     <string name="app_name">DroneDeliverys</string>
 
     <string name="title_deliveries">Deliveries</string>
+    <string name="title_requests">Requests</string>
     <string name="title_drones">Drones</string>
     <string name="title_contacts">Requests</string>
     <string name="title_settings">Settings</string>

@@ -19,24 +19,28 @@ import de.anbeli.dronedelivery.data.DeliveryAdapter;
 import de.anbeli.dronedelivery.fragment.delivery.DeliveryCreationFragment;
 import de.anbeli.dronedelivery.util.DatabaseConnector;
 import de.anbeli.dronedelivery.util.Util;
+import de.anbeli.dronedelivery.util.listeners.onRequestClickListener;
 
 public class RequestFragment extends Fragment {
     ArrayList<Delivery> deliveries_list = new ArrayList<>();
     RecyclerView deliveries;
+    DeliveryAdapter adapter;
     View v;
     Context c;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.fragment_delivery, container, false);
+        v = inflater.inflate(R.layout.fragment_request, container, false);
         c = v.getContext();
 
         deliveries = v.findViewById(R.id.deliveries_recycler_view);
 
-        fetch_deliveries();
-
-        DeliveryAdapter adapter = new DeliveryAdapter(deliveries_list, c);
+        adapter = new DeliveryAdapter(deliveries_list, c, (v, position) -> {
+            ((MainActivity) getActivity()).replace_fragment(new RequestAcceptFragment(deliveries_list.get(position)));
+        });
         deliveries.setAdapter(adapter);
         deliveries.setLayoutManager(new LinearLayoutManager(c));
+
+        fetch_deliveries();
 
         set_listeners();
 
@@ -49,9 +53,11 @@ public class RequestFragment extends Fragment {
 
     private void fetch_deliveries() {
         DatabaseConnector.process_async_post_request("requests", Util.build_session_id_obj_string(), res -> {
-            System.out.println(res);
-            System.out.println(Util.parse_fetch_deliveries_outgoing(res));
-            deliveries_list.addAll(Util.parse_fetch_deliveries_outgoing(res));
+            deliveries_list.addAll(Util.parse_fetch_deliveries_incoming(res));
+
+            c.getMainExecutor().execute(() -> {
+                adapter.notifyDataSetChanged();
+            });
         });
     }
 }

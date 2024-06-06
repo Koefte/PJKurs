@@ -6,17 +6,17 @@
   },
   {
     "sender": "anbeli260906@gmail.com",
-    "receiver": "john@example.com",
-    "accepted": false
-  },
-  {
-    "sender": "anbeli260906@gmail.com",
     "receiver": "anbeli260906@gmail.com",
     "accepted": false
   },
   {
     "sender": "anbeli260906@gmail.com",
-    "receiver": "jsdgajhd@hsad.de",
+    "receiver": "sum@one.de",
+    "accepted": false
+  },
+  {
+    "sender": "anbeli260906@gmail.com",
+    "receiver": "der@eine.wow",
     "accepted": false
   }
 ]

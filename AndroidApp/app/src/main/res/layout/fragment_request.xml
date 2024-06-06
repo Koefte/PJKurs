@@ -9,7 +9,7 @@
         android:id="@+id/title_requests"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/title_deliveries"
+        android:text="@string/title_requests"
         android:textSize="@dimen/font_size_header2"
 
         android:layout_margin="@dimen/topic_split_margin_top"
@@ -19,13 +19,20 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/deliveries_recycler_view"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layoutManager="LinearLayoutManager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title_requests" />
+        android:scrollbars="vertical"
+        app:layout_constraintTop_toBottomOf="@id/title_requests">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/deliveries_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="150dp"
+            app:layoutManager="LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title_requests" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

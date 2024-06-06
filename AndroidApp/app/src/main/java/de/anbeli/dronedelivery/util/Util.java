@@ -98,4 +98,35 @@ public class Util {
 
         return parsed;
     }
+
+    public static ArrayList<Delivery> parse_fetch_deliveries_incoming(JSONObject toParse) {
+        ArrayList<Delivery> parsed = new ArrayList<>();
+        try {
+            JSONArray rawArray = toParse.getJSONArray("in");
+
+            JSONObject[] deliveries = new JSONObject[rawArray.length()];
+
+            for(int i = 0; i < rawArray.length(); i++) {
+                deliveries[i] = (JSONObject) rawArray.get(i);
+            }
+
+            for(JSONObject o : deliveries) {
+                String receiver_email = o.getString("sender");
+
+                if (o.has("geoString")) {
+                    parsed.add(new Delivery(receiver_email, Delivery.delivery_state.TO_BE_DELIVERED, o.getString("geoString")));
+
+                } else if(!o.getBoolean("accepted")) {
+                    parsed.add(new Delivery(receiver_email, Delivery.delivery_state.TO_BE_CONFIRMED));
+                }
+
+
+            }
+
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+        return parsed;
+    }
 }
