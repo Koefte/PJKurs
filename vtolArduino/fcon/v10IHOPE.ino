@@ -203,7 +203,7 @@ float subTrim2=0.7;                   //levelout servo2
 float subTrim3=0.8;       
 float subTrim4=0.2;   
 float subTrim5=0.4;   
-const int bufferSize = 200;
+const int bufferSize = 400;
 float values[bufferSize];
 int currentIndex = 0;
 bool filled = false;
@@ -764,13 +764,13 @@ void control_Mixer() {
   float throttle_Hover;
   if(rcin_aux==6){
     if (rcin_thro >= 0.7) {
-     throttle_Hover = addAndGetSmoothedValue(0.4);
+     throttle_Hover = addAndGetSmoothedValue(0.5);
     } else if (rcin_thro >= 0.5) {
-     throttle_Hover = addAndGetSmoothedValue(0.34);
+     throttle_Hover = addAndGetSmoothedValue(0.45);
     }else if (rcin_thro >= 0.4) {
-      throttle_Hover = addAndGetSmoothedValue(0.32);
+      throttle_Hover = addAndGetSmoothedValue(0.4);
     }else if (rcin_thro >= 0.2) {
-     throttle_Hover = addAndGetSmoothedValue(0.3);
+     throttle_Hover = addAndGetSmoothedValue(0.35);
     } else {
       throttle_Hover=0;
     }
