@@ -39,9 +39,10 @@
 #define WAITFORINPUT 8
 #define RUNHOTSPOT 9
 
-String requestPath = "/api/users";
+//String requestPath = "/api/users";
 int vtolID = 100;
 const char* serverUrl = "https://vtol.weylyn.net/api/requests";
+
 WebServer server(80);
 int state=0;
 char ssid[32];
@@ -175,7 +176,9 @@ void getGoeString(){
       Serial.println("Response: " + response);
       state = 2;
       Serial.println("GeoString is valid");
+      flightState = COPTERARM;
       Serial.println(response);
+      
       convertGeoString(response);
   } else {
     Serial.print("Error occurred: ");
@@ -385,6 +388,8 @@ void flyVtol() {
         thro = 0.5;
       }
     case COPTERLAND:
+      yaw = pYAWCon(gps.getAngle(homeLat, homeLog),angle);
+      pitch = pPitchConCOPTERFLY(calculateDistanceToTarget(lat,log,homeLat,homeLog));
       if(alt - startingALT > 2){ 
         thro=0.25;
       }else{ 
@@ -402,7 +407,6 @@ void flyVtol() {
     case WAITFORINPUT:
       delay(1000);
       getGoeString();
-      flightState = COPTERARM;
     case RUNHOTSPOT:
       server.handleClient();
       break;
