@@ -1,23 +1,7 @@
 [
   {
-    "name": "John",
-    "email": "johnner@example.com",
-    "passwort": "password123",
-    "contacts": [
-      "john@gmail.com"
-    ]
-  },
-  {
-    "name": "John",
-    "email": "john@gmail.com",
-    "passwort": "password123",
-    "contacts": [
-      "john@example.com"
-    ]
-  },
-  {
     "name": "anbeli",
-    "email": "anbeli260906@gmail.com",
-    "passwort": "password"
+    "email": "anbeli260907@gmail.com",
+    "passwort": "passwort"
   }
 ]

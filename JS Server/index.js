@@ -49,6 +49,10 @@ const accept = {
   acceptorSession: 100
 }
 
+const ownersession = {
+  ownerSession: 100
+}
+
 const hardwareID = {
   hardwareID:100
 }
@@ -67,7 +71,7 @@ const requestA = {
 const requestB = {
   sessionID: 100,
   receiver: "max@gmail.com",
-  hardwareID:100,
+  //hardwareID:100,
   geoString:"23N123O",
 }
 
@@ -85,9 +89,9 @@ app.post('/api/stations',(req,res) => {
   res.status(400).json({message:"Wrong format"})
 })
 
-app.get('/api/stations',(req,res) => {
+app.post('/api/stations',(req,res) => {
   const requestData = req.body;
-  if(hasAllKeys(requestData,session)){
+  if(hasAllKeys(requestData,ownersession)){
     const userEmail = getEmailById(requestData.sessionID)
     let stationsTable = JSON.parse(fs.readFileSync('stations.json', 'utf-8'));
     let station;

@@ -23,10 +23,9 @@
 #define echoPin 2
 #define trigPin 4
 
-
-#define travelALT 5
+#define travelALT 2
 #define droppRadius 10
-
+#define travelSpeed 40
 
 #define COPTERARM 0
 #define PLANETarget 1
@@ -42,6 +41,8 @@
 //String requestPath = "/api/users";
 int vtolID = 100;
 const char* serverUrl = "https://vtol.weylyn.net/api/requests";
+float maxChangePerCycleYaw = 0.1;
+
 
 WebServer server(80);
 int state=0;
@@ -61,6 +62,7 @@ float tAlt=0;
 uint16_t channelValue[PPM_CHANNELS] = { 1500, 1500, 1500, 1500, 1500, 1500, 1500, 1500 };
 QMC5883LCompass compass;
 Servo myServo;
+float previousYawOutput = 0.5;
 hw_timer_t *timer = NULL;
 const float low_threshold = 2.0;   // meters
 const float high_threshold = 5.0;  // meters
@@ -123,11 +125,13 @@ float sigmoid(float x) {
 }
 
 void setup() {
+  Serial.begin(9600);
+  
   if(setUPServer()){
+    Serial.println("SetupServer success");
     delay(100);
-    Serial.begin(9600);
     Serial.println("FCOMV1: wating for timer");
-    delay(100);
+    delay(10000);
     Serial.println("FCOMV1: setupcompass");
     setUPCompass();
     Serial.println("FCOMV1: setupPPM");
@@ -140,6 +144,8 @@ void setup() {
     setUPSERVO();
     delay(1000);
     servoDROP(false);
+  }else{
+    Serial.println("SetupServer failed");
   }
 }
 
@@ -336,7 +342,7 @@ void flyVtol() {
     case COPTERSTART:
       yaw = pYAWCon(gps.getAngle(homeLat, homeLog),angle);
       pitch = pPitchConCOPTERFLY(calculateDistanceToTarget(lat,log,homeLat,homeLog));
-      thro = 1;
+      thro = 0.5;
       if(alt > travelALT){ 
         flightState = TRANSITION;
         thro = 0.6;
@@ -355,6 +361,7 @@ void flyVtol() {
     case PLANETarget:
       yaw = pYAWCon((gps.getAngle(tLat, tLog)),angle);
       pitch = pPitchCon(travelALT,alt);
+      thro = correctSpeed(speed,travelSpeed);
       if(travelALT-travelALT*0.2 > alt){ 
         flightState = COPTERLAND;
       }
@@ -380,6 +387,7 @@ void flyVtol() {
     case PLANEHome:
       yaw = pYAWCon((gps.getAngle(homeLat, homeLog)),angle);
       pitch = pPitchCon(travelALT,alt);
+      thro = correctSpeed(speed,travelSpeed);
       if(travelALT-travelALT*0.2 > alt){ 
         flightState = COPTERLAND;
       }
@@ -420,6 +428,10 @@ float pPitchConCOPTERFLY(float pDistance){
   float output = 0.5;
   float scaledErr = sigmoid(pDistance)-0.5;
   return output + scaledErr;
+}
+float correctSpeed(float currSpeed, float targetSpeed){
+  float error = constrain(targetSpeed-currSpeed,-20,20)/30;  //constrain output between -0.6 and 0.6
+  return 0.3+error;
 }
 float calculateDistanceToTarget(float currentLat, float currenLon,float targetLat, float targetLon) {
     // Get current GPS data
@@ -477,6 +489,17 @@ float pYAWCon(float pTAngle, float pAngle) {
     float mappedAngleErr = error / 360 - 0.5;
     // Calculate the desired output
     float desiredOutput = 0.5 - mappedAngleErr/2;
+    // Limit the change in output
+    float change = desiredOutput - previousYawOutput;
+    if (change > maxChangePerCycleYaw) {
+        desiredOutput = previousYawOutput + maxChangePerCycleYaw;
+    } else if (change < -maxChangePerCycleYaw) {
+        desiredOutput = previousYawOutput - maxChangePerCycleYaw;
+    }
+
+    // Update the previous output for the next cycle
+    previousYawOutput = desiredOutput;
+
     return desiredOutput;
 }
 float scaleToUnit(float value) {

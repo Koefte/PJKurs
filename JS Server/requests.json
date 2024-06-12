@@ -1,22 +1,17 @@
 [
   {
-    "sender": "john@example.com",
-    "receiver": "anbeli260906@gmail.com",
-    "geoString": "51.123456,4.567890"
+    "sender": "anbeli260907@gmail.com",
+    "receiver": "anbeli260907@gmail.com",
+    "accepted": true
   },
   {
-    "sender": "anbeli260906@gmail.com",
-    "receiver": "anbeli260906@gmail.com",
-    "accepted": false
+    "sender": "anbeli260907@gmail.com",
+    "receiver": "anbeli260907@gmail.com",
+    "geoString": "50.79020251072106,4.734110310673714"
   },
   {
-    "sender": "anbeli260906@gmail.com",
-    "receiver": "sum@one.de",
-    "accepted": false
-  },
-  {
-    "sender": "anbeli260906@gmail.com",
-    "receiver": "der@eine.wow",
+    "sender": "anbeli260907@gmail.com",
+    "receiver": "anbeli260907@gmail.com",
     "accepted": false
   }
 ]
