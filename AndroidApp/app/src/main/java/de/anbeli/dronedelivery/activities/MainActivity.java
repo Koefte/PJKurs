@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements IMenu {
         });
 
         update_menu();
+
+        replace_fragment(new RequestFragment());
     }
 
     public void update_menu() {

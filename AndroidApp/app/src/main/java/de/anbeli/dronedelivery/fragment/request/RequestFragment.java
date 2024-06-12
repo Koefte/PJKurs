@@ -35,6 +35,7 @@ public class RequestFragment extends Fragment {
         deliveries = v.findViewById(R.id.deliveries_recycler_view);
 
         adapter = new DeliveryAdapter(deliveries_list, c, (v, position) -> {
+            if(deliveries_list.get(position).get_state() != Delivery.delivery_state.TO_BE_CONFIRMED) return;
             ((MainActivity) getActivity()).replace_fragment(new RequestAcceptFragment(deliveries_list.get(position)));
         });
         deliveries.setAdapter(adapter);

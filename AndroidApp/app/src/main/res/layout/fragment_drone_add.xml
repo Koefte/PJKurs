@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        style="@style/standard_text"
+        android:id="@+id/title_delivery_creation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_delivery_creation"
+        android:textSize="@dimen/font_size_header2"
+
+        android:layout_margin="@dimen/topic_split_margin_top"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+
+        style="@style/standard_text"
+
+        android:paddingTop="@dimen/topic_split_margin_top"
+        android:text="@string/text_input_delivery_email"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_delivery_creation"/>
+
+    <EditText
+        android:id="@+id/delivery_creation_input_email"
+
+        style="@style/wrap_content_style"
+
+        android:layout_width="match_parent"
+        android:backgroundTint="@color/white"
+
+        android:layout_marginHorizontal="@dimen/topic_split_margin_top"
+
+        android:inputType="textEmailAddress"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <Button
+        android:id="@+id/new_delivery_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/topic_split_margin_top"
+
+        android:background="@drawable/button_rounded"
+        android:text="@string/text_button_make_delivery_request"
+        app:layout_constraintTop_toBottomOf="@+id/delivery_creation_input_email"
+        tools:layout_editor_absoluteX="40dp" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

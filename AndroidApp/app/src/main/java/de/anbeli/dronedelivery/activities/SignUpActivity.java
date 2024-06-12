@@ -1,5 +1,6 @@
 package de.anbeli.dronedelivery.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -45,47 +46,46 @@ public class SignUpActivity  extends AppCompatActivity {
     }
 
     void set_listeners() {
-        signup_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String username = username_inp.getText().toString();
-                String email = email_inp.getText().toString();
-                String password_initial = password_inp.getText().toString();
-                String password_confirm = password_inp_2.getText().toString();
+        signup_btn.setOnClickListener(v -> {
+            String username = username_inp.getText().toString();
+            String email = email_inp.getText().toString();
+            String password_initial = password_inp.getText().toString();
+            String password_confirm = password_inp_2.getText().toString();
 
-                error_code error = error_code.NO_ERROR;
-                String error_text = "";
+            error_code error = error_code.NO_ERROR;
+            String error_text = "";
 
 
-                if(!password_initial.equals(password_confirm)) error = error_code.SIGNUP_PASSWORD_NO_MATCH;
-                if(!(email.split("@").length==2 && email.contains("."))) error = error_code.SIGNUP_EMAIL_INVALID;
-                if(username.equals("") || email.equals("") || password_initial.equals("")) error = error_code.SIGNUP_FIELD_EMPTY;
+            if(!password_initial.equals(password_confirm)) error = error_code.SIGNUP_PASSWORD_NO_MATCH;
+            if(!(email.split("@").length==2 && email.contains("."))) error = error_code.SIGNUP_EMAIL_INVALID;
+            if(username.equals("") || email.equals("") || password_initial.equals("")) error = error_code.SIGNUP_FIELD_EMPTY;
 
-                if(error != error_code.NO_ERROR) {
-                    switch (error) {
-                        case SIGNUP_EMAIL_INVALID:
-                            error_text = getString(R.string.signup_email_invalid);
-                            break;
-                        case SIGNUP_EMAIL_TAKEN:
-                            error_text = getString(R.string.signup_email_taken);
-                            break;
-                        case SIGNUP_FIELD_EMPTY:
-                            error_text = getString(R.string.signup_field_empty);
-                            break;
-                        case SIGNUP_PASSWORD_NO_MATCH:
-                            error_text = getString(R.string.signup_password_no_match);
-                            break;
-                    }
-
-                    ErrorPopup errorPopup = new ErrorPopup(v.getContext(), error_text);
-                    errorPopup.show();
-                } else {
-                    String post_data = Util.build_user_obj_string(username, email, password_initial);
-
-                    DatabaseConnector.process_async_post_request("users",post_data, res -> {
-                        System.out.println(res);
-                    });
+            if(error != error_code.NO_ERROR) {
+                switch (error) {
+                    case SIGNUP_EMAIL_INVALID:
+                        error_text = getString(R.string.signup_email_invalid);
+                        break;
+                    case SIGNUP_EMAIL_TAKEN:
+                        error_text = getString(R.string.signup_email_taken);
+                        break;
+                    case SIGNUP_FIELD_EMPTY:
+                        error_text = getString(R.string.signup_field_empty);
+                        break;
+                    case SIGNUP_PASSWORD_NO_MATCH:
+                        error_text = getString(R.string.signup_password_no_match);
+                        break;
                 }
+
+                ErrorPopup errorPopup = new ErrorPopup(v.getContext(), error_text);
+                errorPopup.show();
+            } else {
+                String post_data = Util.build_user_obj_string(username, email, password_initial);
+
+                DatabaseConnector.process_async_post_request("users",post_data, res -> {
+                    Intent myIntent = new Intent(v.getContext(), LoginActivity.class);
+                    startActivity(myIntent);
+                    System.out.println(res);
+                });
             }
         });
     }

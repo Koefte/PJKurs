@@ -13,11 +13,14 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import javax.net.ssl.HttpsURLConnection;
 
 
 public class DatabaseConnector {
@@ -36,7 +39,7 @@ public class DatabaseConnector {
             try {
                 URL obj = new URL(db_access + url_add);
 
-                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
                 con.setRequestMethod("GET");
 
                 con.connect();
@@ -74,17 +77,30 @@ public class DatabaseConnector {
             try {
                 URL obj = new URL(db_access + url_add);
 
-                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                URLConnection obj_con = obj.openConnection();
+
+                HttpURLConnection con;
+
+                if(obj.openConnection() instanceof HttpsURLConnection) {
+                    con = (HttpsURLConnection) obj.openConnection();
+                } else {
+                    con = (HttpURLConnection) obj.openConnection();
+                }
                 con.setDoOutput(true);
+                con.setDoInput(true);
                 con.setRequestMethod("POST");
                 con.setRequestProperty("Content-Type", "application/json");
                 con.setRequestProperty("Accept", "application/json");
+
                 OutputStream os = con.getOutputStream();
                 os.write(data.getBytes());
                 os.flush();
                 os.close();
 
-                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
+
+                System.out.println(con.getResponseCode());
+
                 String inputLine;
                 StringBuilder response = new StringBuilder();
 

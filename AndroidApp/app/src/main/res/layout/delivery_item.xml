@@ -37,8 +37,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
+                android:textSize="@dimen/font_size_standard"
                 android:text="Test"
-                android:textSize="@dimen/font_size_header3"
                 app:layout_constraintStart_toEndOf="@+id/icon_view"
                 app:layout_constraintTop_toTopOf="parent" />
 

@@ -3,6 +3,8 @@ package de.anbeli.dronedelivery.util;
 import android.util.JsonReader;
 import android.util.JsonWriter;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,6 +62,50 @@ public class Util {
         try {
             jsonString = new JSONObject()
                     .put("sessionID", DatabaseConnector.session_id)
+                    .toString();
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+        return jsonString;
+    }
+
+
+    public static String build_acceptor_session_id_obj_string() {
+        String jsonString = null;
+        try {
+            jsonString = new JSONObject()
+                    .put("acceptorSession", DatabaseConnector.session_id)
+                    .toString();
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+        return jsonString;
+    }
+
+    public static String build_request_b_obj_string(LatLng location, Delivery delivery) {
+        String jsonString = null;
+        String location_str = location.latitude + "," + location.longitude;
+
+        try {
+            jsonString = new JSONObject()
+                    .put("sessionID", DatabaseConnector.session_id)
+                    .put("receiver", delivery.get_receiver())
+                    .put("geoString", location_str)
+                    .toString();
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+        return jsonString;
+    }
+
+    public static String build_owner_session_id_obj_string() {
+        String jsonString = null;
+        try {
+            jsonString = new JSONObject()
+                    .put("ownerSession", DatabaseConnector.session_id)
                     .toString();
         } catch (JSONException e) {
             throw new RuntimeException(e);

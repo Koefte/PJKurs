@@ -8,7 +8,7 @@
 
     <TextView
         style="@style/standard_text"
-        android:id="@+id/title_deliveries"
+        android:id="@+id/title_drones"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/title_deliveries"
@@ -27,7 +27,7 @@
         android:scrollbars="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title_deliveries">
+        app:layout_constraintTop_toBottomOf="@+id/title_drones">
 
         <Button
             android:layout_width="match_parent"
@@ -36,17 +36,17 @@
             android:layout_margin="@dimen/topic_split_margin_top"
 
             android:background="@drawable/button_rounded"
-            android:text="@string/text_button_new_delivery"/>
+            android:text="@string/text_button_add_drone"/>
 
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/deliveries_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="150dp"
+            android:layout_marginBottom="60dp"
             app:layoutManager="LinearLayoutManager"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/title_deliveries" />
+            app:layout_constraintTop_toBottomOf="@+id/title_drones" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,4 +5,5 @@
     <string name="signup_field_empty">All fields must be filled out</string>
     <string name="login_account_no_exist">There is no account with such login information</string>
     <string name="create_delivery_failed">Delivery Creation failed</string>
+    <string name="no_delivery_location">Select a Delivery Destination</string>
 </resources>

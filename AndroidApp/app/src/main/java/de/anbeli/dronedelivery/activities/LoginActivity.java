@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    void onLogin() {
+    void on_login() {
         String login_post_data = Util.build_login_obj_string(email_inp.getText().toString(), password_inp.getText().toString());
 
         System.out.println("HUH?");
@@ -66,6 +66,7 @@ public class LoginActivity extends AppCompatActivity {
                 ErrorPopup errorPopup = new ErrorPopup(this, getString(R.string.login_account_no_exist));
                 errorPopup.show();
             } else if(res.getString("message").equals("Exists")) {
+
                 DatabaseConnector.session_id = res.getLong("sessionID");
                 DatabaseConnector.save_session_id(this);
                 Intent myIntent = new Intent(this, MainActivity.class);
@@ -74,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
     void set_listeners() {
-        login_btn.setOnClickListener(v -> onLogin());
+        login_btn.setOnClickListener(v -> on_login());
 
         link_reset.setOnClickListener(v -> {
 
