@@ -62,8 +62,8 @@ fast blinking - something is wrong, connect USB serial for info
 //Serial debug on USB Serial port (no GPIO pins)
 
 //RC Receiver:
-#define HW_PIN_RCIN_RX     16
-#define HW_PIN_RCIN_TX     17
+#define HW_PIN_RCIN_RX     35
+//#define HW_PIN_RCIN_TX     17
 //#define HW_PIN_RCIN_INVERTER -1 //only used for STM32 targets
 
 //GPS:
@@ -94,7 +94,7 @@ fast blinking - something is wrong, connect USB serial for info
 //========================================================================================================================//
 
 //--- RC RECEIVER
-#define RCIN_USE  RCIN_USE_CRSF //RCIN_USE_CRSF, RCIN_USE_SBUS, RCIN_USE_DSM, RCIN_USE_PPM, RCIN_USE_PWM
+#define RCIN_USE  RCIN_USE_PPM //RCIN_USE_CRSF, RCIN_USE_SBUS, RCIN_USE_DSM, RCIN_USE_PPM, RCIN_USE_PWM
 #define RCIN_NUM_CHANNELS 6 //number of receiver channels (minimal 6)
 
 //--- IMU SENSOR
@@ -768,9 +768,9 @@ void control_Mixer() {
     } else if (rcin_thro >= 0.5) {
      throttle_Hover = addAndGetSmoothedValue(0.45);
     }else if (rcin_thro >= 0.4) {
-      throttle_Hover = addAndGetSmoothedValue(0.4);
+      throttle_Hover = addAndGetSmoothedValue(0.43);
     }else if (rcin_thro >= 0.2) {
-     throttle_Hover = addAndGetSmoothedValue(0.35);
+     throttle_Hover = addAndGetSmoothedValue(0.4);
     } else {
       throttle_Hover=0;
     }
