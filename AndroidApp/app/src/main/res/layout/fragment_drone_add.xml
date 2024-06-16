@@ -7,10 +7,10 @@
 
     <TextView
         style="@style/standard_text"
-        android:id="@+id/title_delivery_creation"
+        android:id="@+id/title_drone_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/title_delivery_creation"
+        android:text="@string/title_drone_add"
         android:textSize="@dimen/font_size_header2"
 
         android:layout_margin="@dimen/topic_split_margin_top"
@@ -25,10 +25,10 @@
         style="@style/standard_text"
 
         android:paddingTop="@dimen/topic_split_margin_top"
-        android:text="@string/text_input_delivery_email"
+        android:text="@string/text_input_drone_add"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title_delivery_creation"/>
+        app:layout_constraintTop_toBottomOf="@+id/title_drone_add"/>
 
     <EditText
         android:id="@+id/delivery_creation_input_email"
@@ -54,7 +54,7 @@
         android:layout_margin="@dimen/topic_split_margin_top"
 
         android:background="@drawable/button_rounded"
-        android:text="@string/text_button_make_delivery_request"
+        android:text="@string/text_button_add_drone"
         app:layout_constraintTop_toBottomOf="@+id/delivery_creation_input_email"
         tools:layout_editor_absoluteX="40dp" />
 

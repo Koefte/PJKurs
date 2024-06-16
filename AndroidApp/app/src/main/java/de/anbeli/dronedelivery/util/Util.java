@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import de.anbeli.dronedelivery.data.Delivery;
+import de.anbeli.dronedelivery.data.Drone;
 
 public class Util {
     public static String build_user_obj_string(String name, String mail, String password) {
@@ -172,6 +173,14 @@ public class Util {
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
+
+        return parsed;
+    }
+
+    public static ArrayList<Drone> parse_fetch_drones(JSONObject toParse) {
+        ArrayList<Drone> parsed = new ArrayList<>();
+
+        System.out.println("teeesst");
 
         return parsed;
     }

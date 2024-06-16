@@ -25,7 +25,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class DatabaseConnector {
     static ExecutorService mExecutor = Executors.newSingleThreadExecutor();
-    public static final String db_access = "http://10.0.2.2:3001/api/";
+    public static final String db_access = "https://vtol.weylyn.net/api/";
     public static long session_id = -1;
     public interface onTaskFinishListener {
         void on_request_completed(JSONObject res) throws JSONException;

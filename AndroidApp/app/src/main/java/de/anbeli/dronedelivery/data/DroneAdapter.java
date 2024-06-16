@@ -16,12 +16,12 @@ import de.anbeli.dronedelivery.util.listeners.onRequestClickListener;
 
 public class DroneAdapter extends RecyclerView.Adapter<DroneAdapter.DroneViewHolder> {
 
-    private List<Delivery> delivery_list;
+    private List<Drone> drone_list;
     private onRequestClickListener listener;
     Context c;
 
-    public DroneAdapter(List<Delivery> delivery_list, Context c, onRequestClickListener listener) {
-        this.delivery_list = delivery_list;
+    public DroneAdapter(List<Drone> delivery_list, Context c, onRequestClickListener listener) {
+        this.drone_list = delivery_list;
         this.listener = listener;
         this.c = c;
     }
@@ -32,14 +32,14 @@ public class DroneAdapter extends RecyclerView.Adapter<DroneAdapter.DroneViewHol
         public DroneViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            delivery_text = (TextView) itemView.findViewById(R.id.delivery_text);
-            delivery_state_text = (TextView) itemView.findViewById(R.id.delivery_state_text);
+            drone_name = (TextView) itemView.findViewById(R.id.delivery_text);
+            hardware_id = (TextView) itemView.findViewById(R.id.delivery_state_text);
 
             itemView.setOnClickListener(this);
         }
 
-        public TextView delivery_text;
-        public TextView delivery_state_text;
+        public TextView drone_name;
+        public TextView hardware_id;
 
         @Override
         public void onClick(View v) {
@@ -59,17 +59,17 @@ public class DroneAdapter extends RecyclerView.Adapter<DroneAdapter.DroneViewHol
 
     @Override
     public void onBindViewHolder(@NonNull DroneAdapter.DroneViewHolder holder, int position) {
-        Delivery delivery = delivery_list.get(position);
+        Drone drone = drone_list.get(position);
 
-        TextView delivery_text = holder.delivery_text;
-        TextView delivery_state_text = holder.delivery_state_text;
-        delivery_text.setText(delivery.get_receiver());
-        delivery_state_text.setText(getDeliveryTextState(delivery.get_state()));
+        TextView drone_name = holder.drone_name;
+        TextView hardware_id = holder.hardware_id;
+        drone_name.setText(drone.get_name());
+        hardware_id.setText(Long.toString(drone.get_hardware_id()));
     }
 
     @Override
     public int getItemCount() {
-        return delivery_list.size();
+        return drone_list.size();
     }
 
     private String getDeliveryTextState(Delivery.delivery_state state) {

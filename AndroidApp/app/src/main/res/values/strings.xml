@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DroneDeliverys</string>
+    <string name="app_name">DroneDrop</string>
 
     <string name="title_deliveries">Deliveries</string>
     <string name="title_requests">Requests</string>

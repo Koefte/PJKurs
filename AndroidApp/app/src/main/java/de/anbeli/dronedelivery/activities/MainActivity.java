@@ -1,6 +1,7 @@
 package de.anbeli.dronedelivery.activities;
 
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +11,8 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import de.anbeli.dronedelivery.IMenu;
 import de.anbeli.dronedelivery.R;
@@ -23,12 +26,16 @@ public class MainActivity extends AppCompatActivity implements IMenu {
 
     ActivityMainBinding binding;
 
+    View page_view;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        page_view = findViewById(R.id.frameLayout);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -51,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements IMenu {
 
         update_menu();
 
+       binding.bottomNavigationView.setSelectedItemId(R.id.nav_contacts);
         replace_fragment(new RequestFragment());
     }
 
