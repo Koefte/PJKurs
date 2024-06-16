@@ -108,7 +108,7 @@ fast blinking - something is wrong, connect USB serial for info
 #define GPS_BAUD  115200
 
 //--- BAROMETER SENSOR
-#define BARO_USE  BARO_USE_BMP280 // BARO_USE_BMP280, BARO_USE_MS5611, BARO_USE_NONE
+#define BARO_USE  BARO_USE_NONE // BARO_USE_BMP280, BARO_USE_MS5611, BARO_USE_NONE
 #define BARO_I2C_ADR  0x77 //set barometer I2C address, leave commented for default address. If unknown, use CLI 'i2c'
 
 //--- EXTERNAL MAGNETOMETER SENSOR
@@ -180,7 +180,7 @@ float maxRollRate    = 30.0;      //Max roll rate in deg/sec for rate mode
 float maxPitchRate   = 30.0;      //Max pitch rate in deg/sec for rate mode
 float maxYawRate     = 160.0;     //Max yaw rate in deg/sec for angle and rate mode
 
-float Kp_ro_pi_angle  = 0.2;      //Roll/Pitch P-gain - angle mode 
+float Kp_ro_pi_angle  = 0.3;      //Roll/Pitch P-gain - angle mode 
 float Ki_ro_pi_angle  = 0.1;      //Roll/Pitch I-gain - angle mode
 float Kd_ro_pi_angle  = 0.05;     //Roll/Pitch D-gain - angle mode (has no effect on control_Angle2)
 float B_loop_ro_pi    = 0.9;      //Roll/Pitch damping term for control_Angle2(), lower is more damping (must be between 0 to 1)
@@ -763,9 +763,9 @@ float addAndGetSmoothedValue(float newValue) {
 void control_Mixer() {
   float throttle_Hover;
   if(rcin_aux==6){
-    if (rcin_thro >= 0.7) {
+    if (rcin_thro >= 0.8) {
      throttle_Hover = addAndGetSmoothedValue(0.5);
-    } else if (rcin_thro >= 0.5) {
+    } else if (rcin_thro >= 0.6) {
      throttle_Hover = addAndGetSmoothedValue(0.45);
     }else if (rcin_thro >= 0.4) {
       throttle_Hover = addAndGetSmoothedValue(0.43);
