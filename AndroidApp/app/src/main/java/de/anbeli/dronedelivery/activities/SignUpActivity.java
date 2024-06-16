@@ -60,6 +60,8 @@ public class SignUpActivity  extends AppCompatActivity {
             if(!(email.split("@").length==2 && email.contains("."))) error = error_code.SIGNUP_EMAIL_INVALID;
             if(username.equals("") || email.equals("") || password_initial.equals("")) error = error_code.SIGNUP_FIELD_EMPTY;
 
+            //Handle potential error with inputs
+
             if(error != error_code.NO_ERROR) {
                 switch (error) {
                     case SIGNUP_EMAIL_INVALID:
@@ -79,6 +81,8 @@ public class SignUpActivity  extends AppCompatActivity {
                 ErrorPopup errorPopup = new ErrorPopup(v.getContext(), error_text);
                 errorPopup.show();
             } else {
+                //No error -> post to server
+
                 String post_data = Util.build_user_obj_string(username, email, password_initial);
 
                 DatabaseConnector.process_async_post_request("users",post_data, res -> {

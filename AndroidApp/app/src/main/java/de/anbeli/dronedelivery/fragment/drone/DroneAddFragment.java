@@ -39,9 +39,15 @@ public class DroneAddFragment extends Fragment {
 
     private void set_listeners() {
         add_drone_btn.setOnClickListener(view -> {
+
+            //Post hardwareID to link drone to user on server
+
             DatabaseConnector.process_async_post_request(
                     "drones",
                     Util.build_drone_id_obj_string(Integer.parseInt(serial_number_inp.getText().toString())),res -> {
+
+                        //checking for valid response
+
                         if(!res.getString("message").equals("Succesfully created the drone")) {
                             ErrorPopup errorPopup = new ErrorPopup(c, getString(R.string.drone_creation_failed));
                             errorPopup.show();

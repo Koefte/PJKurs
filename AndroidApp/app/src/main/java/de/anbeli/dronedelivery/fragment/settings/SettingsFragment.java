@@ -33,6 +33,7 @@ public class SettingsFragment extends Fragment {
     Button sign_off_button;
     View v;
     Context c;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_settings, container, false);
@@ -49,6 +50,9 @@ public class SettingsFragment extends Fragment {
     private void set_listeners() {
         drone_switch.setChecked(c.getSharedPreferences("save_data", MODE_PRIVATE).getBoolean("drone_management", false));
         drone_switch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+
+            //Save if user uses drone pages (delivery- + drones- page) through app restarts
+
             SharedPreferences.Editor e = c.getSharedPreferences("save_data", MODE_PRIVATE).edit();
             e.putBoolean("drone_management", isChecked);
             e.apply();
@@ -62,6 +66,9 @@ public class SettingsFragment extends Fragment {
     }
 
     private void sign_off() {
+
+        //make request to delete session ID
+
         DatabaseConnector.process_async_post_request("users", Util.build_session_id_obj_string(), res -> {
             if(res.getString("message").equals("Logged out")) {
                 DatabaseConnector.session_id = -1;

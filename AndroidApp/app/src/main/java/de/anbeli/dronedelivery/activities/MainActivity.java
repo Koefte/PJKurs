@@ -43,6 +43,9 @@ public class MainActivity extends AppCompatActivity implements IMenu {
             return insets;
         });
 
+
+        //Swap fragments according to menu
+
         binding.bottomNavigationView.setOnItemSelectedListener(menuItem -> {
             if(menuItem.getItemId() == R.id.nav_deliveries)
                 replace_fragment(new DeliveryFragment());
@@ -63,6 +66,9 @@ public class MainActivity extends AppCompatActivity implements IMenu {
     }
 
     public void update_menu() {
+
+        //update menu used to remove/add menu options when drone owner option is disabled/enables
+
         boolean drone_management = getSharedPreferences("save_data", MODE_PRIVATE).getBoolean("drone_management", false);
 
         if(drone_management) {
@@ -74,6 +80,8 @@ public class MainActivity extends AppCompatActivity implements IMenu {
         }
     }
 
+
+    // Method to replace fragment visible in Main Activity
     public void replace_fragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

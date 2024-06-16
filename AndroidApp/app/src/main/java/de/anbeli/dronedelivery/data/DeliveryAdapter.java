@@ -73,6 +73,8 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.Delive
     }
 
     private String getDeliveryTextState(Delivery.delivery_state state) {
+        //Method to match enum values to Strings
+
         switch(state) {
             case DELIVERY_IN_PROGRESS:
                 return c.getString(R.string.text_deliver_state_in_progress);

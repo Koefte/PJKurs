@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -20,18 +21,24 @@ import java.util.concurrent.Executors;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.annotation.NonNull;
+
 import javax.net.ssl.HttpsURLConnection;
 
 
 public class DatabaseConnector {
     static ExecutorService mExecutor = Executors.newSingleThreadExecutor();
+
+    //Address of Server
     public static final String db_access = "http://10.0.2.2:3001/api/";
     public static long session_id = -1;
     public interface onTaskFinishListener {
         void on_request_completed(JSONObject res) throws JSONException;
     }
 
-    public static void process_async_get_request(String url_add, onTaskFinishListener listener) {
+    //Currently no use
+
+    /*public static void process_async_get_request(String url_add, onTaskFinishListener listener) {
         Runnable backgroundRunnable = () -> {
 
             String result = "";
@@ -67,7 +74,9 @@ public class DatabaseConnector {
         };
 
         mExecutor.execute(backgroundRunnable);
-    }
+    }*/
+
+    //Method for posting to Server
 
     public static void process_async_post_request(String url_add, String data, onTaskFinishListener listener) {
         Runnable backgroundRunnable = () -> {
@@ -75,22 +84,7 @@ public class DatabaseConnector {
             String result = "";
 
             try {
-                URL obj = new URL(db_access + url_add);
-
-                URLConnection obj_con = obj.openConnection();
-
-                HttpURLConnection con;
-
-                if(obj.openConnection() instanceof HttpsURLConnection) {
-                    con = (HttpsURLConnection) obj.openConnection();
-                } else {
-                    con = (HttpURLConnection) obj.openConnection();
-                }
-                con.setDoOutput(true);
-                con.setDoInput(true);
-                con.setRequestMethod("POST");
-                con.setRequestProperty("Content-Type", "application/json");
-                con.setRequestProperty("Accept", "application/json");
+                HttpURLConnection con = get_http_url_connection(url_add);
 
                 OutputStream os = con.getOutputStream();
                 os.write(data.getBytes());
@@ -128,7 +122,27 @@ public class DatabaseConnector {
         mExecutor.execute(backgroundRunnable);
     }
 
+    private static HttpURLConnection get_http_url_connection(String url_add) throws IOException {
+        URL obj = new URL(db_access + url_add);
+
+        HttpURLConnection con;
+
+        //Check if connecting to http or https
+        if(obj.openConnection() instanceof HttpsURLConnection) {
+            con = (HttpsURLConnection) obj.openConnection();
+        } else {
+            con = (HttpURLConnection) obj.openConnection();
+        }
+        con.setDoOutput(true);
+        con.setDoInput(true);
+        con.setRequestMethod("POST");
+        con.setRequestProperty("Content-Type", "application/json");
+        con.setRequestProperty("Accept", "application/json");
+        return con;
+    }
+
     public static void save_session_id(Context c) {
+        //save session ID
         SharedPreferences.Editor e = c.getSharedPreferences("save_data", MODE_PRIVATE).edit();
         e.putLong("session_id", DatabaseConnector.session_id);
         e.apply();

@@ -1,6 +1,10 @@
 [
-    {
-        "hardwareID":100,
-        "user":"john@example.com"
-    }
+  {
+    "hardwareID": 100,
+    "user": "john@example.com"
+  },
+  {
+    "user": "sum@one.de",
+    "hardwareID": 32123312
+  }
 ]

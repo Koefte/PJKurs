@@ -40,6 +40,8 @@ public class DroneFragment extends Fragment {
         add_drone_btn = v.findViewById(R.id.new_drone_button);
         drones = v.findViewById(R.id.drones_recycler_view);
 
+        //Creating DroneAdapter with for now empty click listener
+
         adapter = new DroneAdapter(drone_list, c, (v, position) -> {});
         drones.setAdapter(adapter);
         drones.setLayoutManager(new LinearLayoutManager(c));
@@ -56,6 +58,8 @@ public class DroneFragment extends Fragment {
             ((MainActivity) getActivity()).replace_fragment(new DroneAddFragment());
         });
     }
+
+    //Request the users drones by posting his sessionID to /api/drones
 
     private void fetch_drones() {
         String post_data = Util.build_owner_session_id_obj_string();

@@ -57,6 +57,9 @@ public class DeliveryFragment extends Fragment {
     }
 
     private void fetch_deliveries() {
+
+        //get outgoing deliveries
+
         DatabaseConnector.process_async_post_request("requests", Util.build_session_id_obj_string(), res -> {
             deliveries_list.addAll(Util.parse_fetch_deliveries_outgoing(res));
 

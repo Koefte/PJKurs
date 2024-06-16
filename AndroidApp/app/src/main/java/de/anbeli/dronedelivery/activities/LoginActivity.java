@@ -49,24 +49,34 @@ public class LoginActivity extends AppCompatActivity {
         DatabaseConnector.session_id = getSharedPreferences("save_data", MODE_PRIVATE).getLong("session_id", -1);
         System.out.println("saved session " + DatabaseConnector.session_id);
 
+        //Save sessionID only when none present
+
         if(DatabaseConnector.session_id != -1) {
             Intent myIntent = new Intent(this, MainActivity.class);
             startActivity(myIntent);
+        } else {
+
+            //If theres still a sessionID saved, send to server to remove and be in signed out state again
+
+            DatabaseConnector.process_async_post_request("users", Util.build_session_id_obj_string(), res -> {
+                    DatabaseConnector.session_id = -1;
+                    DatabaseConnector.save_session_id(this);
+            });
         }
     }
 
     void on_login() {
         String login_post_data = Util.build_login_obj_string(email_inp.getText().toString(), password_inp.getText().toString());
 
-        System.out.println("HUH?");
-
         DatabaseConnector.process_async_post_request("users",login_post_data, res -> {
+
+            //Handle response to Login
+
             if(res.getString("message").equals("Doesnt exist")) {
                 System.out.println(res.getString("message"));
                 ErrorPopup errorPopup = new ErrorPopup(this, getString(R.string.login_account_no_exist));
                 errorPopup.show();
             } else if(res.getString("message").equals("Exists")) {
-
                 DatabaseConnector.session_id = res.getLong("sessionID");
                 DatabaseConnector.save_session_id(this);
                 Intent myIntent = new Intent(this, MainActivity.class);
@@ -77,6 +87,7 @@ public class LoginActivity extends AppCompatActivity {
     void set_listeners() {
         login_btn.setOnClickListener(v -> on_login());
 
+        //No current way to reset password; placeholder
         link_reset.setOnClickListener(v -> {
 
         });

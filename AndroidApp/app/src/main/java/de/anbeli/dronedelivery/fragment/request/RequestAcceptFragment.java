@@ -50,6 +50,7 @@ public class RequestAcceptFragment extends Fragment implements OnMapReadyCallbac
     GoogleMap map;
     Button accept_btn;
 
+    //Save the delivery that is being accepted for further processing by passing to constructor
     public RequestAcceptFragment(Delivery delivery) {
         this.delivery = delivery;
     }
@@ -64,6 +65,7 @@ public class RequestAcceptFragment extends Fragment implements OnMapReadyCallbac
 
         set_listeners();
 
+        //Initialize Google Map
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.fragment_map);
         mapFragment.getMapAsync(this);
 
@@ -72,6 +74,9 @@ public class RequestAcceptFragment extends Fragment implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
+
+        //Add onClickListener to add Marker to Map and select Location
+
         this.map = googleMap;
 
         map.setOnMapClickListener(latLng ->  {
@@ -93,13 +98,12 @@ public class RequestAcceptFragment extends Fragment implements OnMapReadyCallbac
                 errorPopup.show();
                 return;
             }
-            DatabaseConnector.process_async_post_request("requests", Util.build_acceptor_session_id_obj_string(), res -> {
-                System.out.println(res);
-            });
 
-            DatabaseConnector.process_async_post_request("requests", Util.build_request_b_obj_string(delivery_location, delivery), res -> {
-                System.out.println(res);
-            });
+            //Accept request
+            DatabaseConnector.process_async_post_request("requests", Util.build_acceptor_session_id_obj_string(), res -> {});
+
+            //Post selected Coordinates
+            DatabaseConnector.process_async_post_request("requests", Util.build_request_b_obj_string(delivery_location, delivery), res -> {});
 
             ((MainActivity) getActivity()).replace_fragment(new RequestFragment());
         });

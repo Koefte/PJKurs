@@ -39,6 +39,8 @@ public class DeliveryCreationFragment extends Fragment {
 
     private void set_listeners() {
         new_delivery_btn.setOnClickListener(v -> {
+            //make post request and handle potential responses, only proceed on valid response
+
             DatabaseConnector.process_async_post_request("requests", Util.build_request_a_obj_string(receiver_email_inp.getText().toString()), res -> {
                 if(!res.getString("message").equals("Succesfully created the request A")) {
                     ErrorPopup errorPopup = new ErrorPopup(c, c.getString(R.string.create_delivery_failed));

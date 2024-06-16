@@ -26,6 +26,9 @@ public class ErrorPopup {
 
     public ErrorPopup(Context c, String text) {
         con = c;
+
+        //Execute on UI Thread
+
         c.getMainExecutor().execute(() -> {
             dialog = new Dialog(c);
             dialog.setContentView(R.layout.error_popup);

@@ -15,6 +15,9 @@ import de.anbeli.dronedelivery.data.Delivery;
 import de.anbeli.dronedelivery.data.Drone;
 
 public class Util {
+
+    //Class to build JSON Objects for comms with Server
+
     public static String build_user_obj_string(String name, String mail, String password) {
         String jsonString = null;
         try {
@@ -24,7 +27,6 @@ public class Util {
                     .put("passwort", password)
                     .toString();
         } catch (JSONException e) {
-            throw new RuntimeException(e);
         }
 
         return jsonString;
@@ -38,7 +40,6 @@ public class Util {
                     .put("passwort", password)
                     .toString();
         } catch (JSONException e) {
-            throw new RuntimeException(e);
         }
 
         return jsonString;
@@ -52,7 +53,6 @@ public class Util {
                     .put("receiver", receiverEmail)
                     .toString();
         } catch (JSONException e) {
-            throw new RuntimeException(e);
         }
 
         return jsonString;
@@ -65,7 +65,6 @@ public class Util {
                     .put("sessionID", DatabaseConnector.session_id)
                     .toString();
         } catch (JSONException e) {
-            throw new RuntimeException(e);
         }
 
         return jsonString;
@@ -79,7 +78,6 @@ public class Util {
                     .put("acceptorSession", DatabaseConnector.session_id)
                     .toString();
         } catch (JSONException e) {
-            throw new RuntimeException(e);
         }
 
         return jsonString;
@@ -96,7 +94,6 @@ public class Util {
                     .put("geoString", location_str)
                     .toString();
         } catch (JSONException e) {
-            throw new RuntimeException(e);
         }
 
         return jsonString;
@@ -109,7 +106,6 @@ public class Util {
                     .put("ownerSession", DatabaseConnector.session_id)
                     .toString();
         } catch (JSONException e) {
-            throw new RuntimeException(e);
         }
 
         return jsonString;
@@ -123,7 +119,6 @@ public class Util {
                     .put("sessionID", DatabaseConnector.session_id)
                     .toString();
         } catch (JSONException e) {
-            throw new RuntimeException(e);
         }
 
         return jsonString;
@@ -154,7 +149,6 @@ public class Util {
             }
 
         } catch (JSONException e) {
-            throw new RuntimeException(e);
         }
 
         return parsed;
@@ -185,7 +179,6 @@ public class Util {
             }
 
         } catch (JSONException e) {
-            throw new RuntimeException(e);
         }
 
         return parsed;
@@ -207,7 +200,6 @@ public class Util {
                 parsed.add(new Drone("Drone 1", o.getLong("hardwareID")));
             }
         } catch (JSONException e) {
-            throw new RuntimeException(e);
         }
 
         return parsed;
