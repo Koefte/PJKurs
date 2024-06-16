@@ -2,15 +2,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const { request } = require('http');
-
 const app = express();
 const port = 3001;
-
 function hasAllKeys(objToCheck, keysObj) {
   if(Object.keys(objToCheck).length != (Object.keys(keysObj).length)) return false
   return Object.keys(keysObj).every(key => objToCheck.hasOwnProperty(key));
 }
-
 function getEmailById(id){
   let sessionData = JSON.parse(fs.readFileSync('ids.json', 'utf-8'));
   console.log(sessionData)
@@ -21,21 +18,17 @@ function getEmailById(id){
 }
 
 function getUserByHardwareId(id){
-  let stationsTable = JSON.parse(fs.readFileSync('stations.json', 'utf-8'));
-  for(let entry of stationsTable){
+  let dronesTable = JSON.parse(fs.readFileSync('drones.json', 'utf-8'));
+  for(let entry of dronesTable){
     if(entry.hardwareID == id) return entry.user
   } 
 }
-
-
 app.use(bodyParser.json());
-
 const acc = {
   name:"Max",
   email:"maxmustermann@gmail.com",
   passwort:"passwort"
 } 
-
 const entry = {
   email:"email.com",
   passwort:"passwort"
@@ -57,17 +50,14 @@ const hardwareID = {
   hardwareID:100
 }
 
-const station = {
+const drone = {
   hardwareID:100,
   sessionID:100
 }
-
 const requestA = {
   sessionID: 100,
   receiver: "max@gmail.com"
 }
-
-
 const requestB = {
   sessionID: 100,
   receiver: "max@gmail.com",
@@ -76,37 +66,28 @@ const requestB = {
 }
 
 
-app.post('/api/stations',(req,res) => {
-
-  console.log(tets)
-
+app.post('/api/drones',(req,res) => {
   const requestData = req.body;
-  if(hasAllKeys(requestData,station)){
+  if(hasAllKeys(requestData,drone)){
     const userEmail = getEmailById(requestData.sessionID)
-    let stationsTable = JSON.parse(fs.readFileSync('stations.json', 'utf-8'));
-    stationsTable.push({user:userEmail,station:hardwareID})
-    fs.writeFileSync('stations.json', JSON.stringify(stationsTable, null, 2), 'utf-8');
-    res.status(200).json({message:"Succesfully created the station"})
+    let dronesTable = JSON.parse(fs.readFileSync('drones.json', 'utf-8'));
+    dronesTable.push({user:userEmail,drone:hardwareID})
+    fs.writeFileSync('drones.json', JSON.stringify(dronesTable, null, 2), 'utf-8');
+    res.status(200).json({message:"Succesfully created the drone"})
     return
   }
-  res.status(400).json({message:"Wrong format"})
-})
-
-app.post('/api/stations',(req,res) => {
-  const requestData = req.body;
   if(hasAllKeys(requestData,ownersession)){
     const userEmail = getEmailById(requestData.sessionID)
-    let stationsTable = JSON.parse(fs.readFileSync('stations.json', 'utf-8'));
-    let station;
-    for(let entry in stationsTable){
-      if(entry.user == userEmail) station = entry.hardwareID
+    let dronesTable = JSON.parse(fs.readFileSync('drones.json', 'utf-8'));
+    let drone;
+    for(let entry in dronesTable){
+      if(entry.user == userEmail) drone = entry.hardwareID
     }   
-    res.status(200).json({station:station})
+    res.status(200).json({drone:drone})
     return
   }
   res.status(400).json({message:"Wrong format"})
 })
-
 app.post('/api/requests',(req,res) => {
   const requestData = req.body;
   if(hasAllKeys(requestData,requestA)){
@@ -120,6 +101,7 @@ app.post('/api/requests',(req,res) => {
   else if(hasAllKeys(requestData,requestB)){
     const senderEmail = getEmailById(requestData.sessionID)
     let requestTable = JSON.parse(fs.readFileSync('requests.json', 'utf-8'));
+    requestTable = requestTable.filter((el) => !(el.sender == senderEmail && el.receiver == requestData.receiver))
     requestTable.push({sender:senderEmail,receiver:requestData.receiver,geoString:requestData.geoString})
     fs.writeFileSync('requests.json', JSON.stringify(requestTable, null, 2), 'utf-8');
     res.status(200).json({message:"Succesfully created the request B"})
@@ -142,6 +124,8 @@ app.post('/api/requests',(req,res) => {
     for(let req of requestTable){
       if(req.sender == user) coords.push(req.geoString)
     }
+    requestTable = requestTable.filter((req) => req.sender != user)
+    fs.writeFileSync('requests.json', JSON.stringify(requestTable, null, 2), 'utf-8')
     res.status(200).json({coords:coords})
     return
   }
@@ -164,9 +148,7 @@ app.post('/api/requests',(req,res) => {
 // POST request handler
 app.post('/api/users', (req, res) => {
   const requestData = req.body;
-
   console.log(requestData);
-
   if(hasAllKeys(requestData,acc) ){
     try {
       const existingData = fs.readFileSync('users.json', 'utf-8');
@@ -192,10 +174,8 @@ app.post('/api/users', (req, res) => {
   
   }
   else if(hasAllKeys(requestData,entry)){
-
     let existingData = fs.readFileSync('users.json', 'utf-8');
     existingData = JSON.parse(existingData)
-
     if(existingData.map(data => JSON.stringify([data.email, data.passwort])).includes(JSON.stringify(Object.values(requestData)))){
       const sessionID = Math.floor(Math.random() * Date.now());
       let sessionData = JSON.parse(fs.readFileSync('ids.json', 'utf-8'));
@@ -217,7 +197,6 @@ app.post('/api/users', (req, res) => {
     }
     return;
   }
-
   
   else if(hasAllKeys(requestData,session)){
     let sessionData = JSON.parse(fs.readFileSync('ids.json', 'utf-8'));
@@ -228,20 +207,15 @@ app.post('/api/users', (req, res) => {
     return;
     
   }
-
-
   res.status(400).json({ error: 'Wrong data' });
 });
-
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
 });
-
 app.get('/api/users', (req, res) => {
   try {
     const data = fs.readFileSync('users.json', 'utf-8');
     const jsonData = JSON.parse(data).map(data => ({name: data.name, email: data.email}));
-
     res.status(200).json(jsonData);
     console.log("Succesfully received get request")
   } catch (error) {
