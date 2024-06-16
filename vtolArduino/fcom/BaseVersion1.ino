@@ -50,7 +50,6 @@ String requestPath = "/api/users";
 int vtolID = 100;
 const char* serverUrl = "https://vtol.weylyn.net/api/requests";
 WebServer server(80);
-int state=0;
 char ssid[32];
 char password[32];
 
@@ -181,8 +180,6 @@ void getGoeString(){
   if (httpResponseCode > 0) {
       String response = http.getString();
       Serial.println("Response: " + response);
-      state = 2;
-      Serial.println("GeoString is valid");
       Serial.println(response);
       convertGeoString(response);
   } else {
@@ -200,7 +197,6 @@ bool connectToWiFi() {
       Serial.println("\nConnected to WiFi");
       Serial.println("IP address: ");
       Serial.println(WiFi.localIP());
-      state = 1;
       return true;
     }
     delay(100);
@@ -282,6 +278,9 @@ void convertGeoString(String response){
   tLat = latitude;
   tLog = longitude;
   tAlt = altitude;
+  if(tLat == 0||tLog ==0){
+    ESP.restart();
+  } 
   // Print the parsed values
   Serial.print("Latitude: ");
   Serial.println(latitude, 6);
