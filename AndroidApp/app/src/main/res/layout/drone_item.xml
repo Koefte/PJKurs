@@ -31,7 +31,7 @@
             app:layout_constraintTop_toBottomOf="@+id/icon_view">
 
             <TextView
-                android:id="@+id/delivery_text"
+                android:id="@+id/drone_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
@@ -41,7 +41,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/delivery_state_text"
+                android:id="@+id/drone_id_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="to be changed" />

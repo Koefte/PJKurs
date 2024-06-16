@@ -4,6 +4,7 @@ const fs = require('fs');
 const { request } = require('http');
 const app = express();
 const port = 3001;
+
 function hasAllKeys(objToCheck, keysObj) {
   if(Object.keys(objToCheck).length != (Object.keys(keysObj).length)) return false
   return Object.keys(keysObj).every(key => objToCheck.hasOwnProperty(key));
@@ -23,40 +24,42 @@ function getUserByHardwareId(id){
     if(entry.hardwareID == id) return entry.user
   } 
 }
+
 app.use(bodyParser.json());
+
 const acc = {
   name:"Max",
   email:"maxmustermann@gmail.com",
-  passwort:"passwort"
+  passwort:"passwort",
 } 
 const entry = {
   email:"email.com",
-  passwort:"passwort"
+  passwort:"passwort",
 }
 
 const session = {
-  sessionID: 100
+  sessionID: 100,
 }
 
 const accept = {
-  acceptorSession: 100
+  acceptorSession: 100,
 }
 
 const ownersession = {
-  ownerSession: 100
+  ownerSession: 100,
 }
 
 const hardwareID = {
-  hardwareID:100
+  hardwareID:100,
 }
 
 const drone = {
   hardwareID:100,
-  sessionID:100
+  sessionID:100,
 }
 const requestA = {
   sessionID: 100,
-  receiver: "max@gmail.com"
+  receiver: "max@gmail.com",
 }
 const requestB = {
   sessionID: 100,
@@ -70,24 +73,25 @@ app.post('/api/drones',(req,res) => {
   const requestData = req.body;
   if(hasAllKeys(requestData,drone)){
     const userEmail = getEmailById(requestData.sessionID)
-    let dronesTable = JSON.parse(fs.readFileSync('drones.json', 'utf-8'));
-    dronesTable.push({user:userEmail,drone:hardwareID})
+    let dronesTable = JSON.parse(fs.readFileSync('drones.json', 'utf-8'))
+    dronesTable.push({user:userEmail,hardwareID:requestData.hardwareID})
     fs.writeFileSync('drones.json', JSON.stringify(dronesTable, null, 2), 'utf-8');
     res.status(200).json({message:"Succesfully created the drone"})
     return
   }
-  if(hasAllKeys(requestData,ownersession)){
-    const userEmail = getEmailById(requestData.sessionID)
+  else if(hasAllKeys(requestData,ownersession)){
+    const userEmail = getEmailById(requestData.ownerSession)
     let dronesTable = JSON.parse(fs.readFileSync('drones.json', 'utf-8'));
     let drone;
-    for(let entry in dronesTable){
-      if(entry.user == userEmail) drone = entry.hardwareID
+    for(let entry_ of dronesTable){
+      if(entry_.user == userEmail) drone = entry_.hardwareID
     }   
-    res.status(200).json({drone:drone})
+    res.status(200).json({drones:[{hardwareID:drone}]})
     return
   }
   res.status(400).json({message:"Wrong format"})
 })
+
 app.post('/api/requests',(req,res) => {
   const requestData = req.body;
   if(hasAllKeys(requestData,requestA)){

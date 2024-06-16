@@ -40,4 +40,7 @@
 
     <string name="text_switch_settings_has_drone">Enable Drone Management</string>
     <string name="text_button_make_delivery_request">Make Delivery Request</string>
+
+    <string name="prefix_delivery_pin">Drop-off Location for delivery from</string>
+    <string name="prefix_drone_hardware_ID">Hardware ID :</string>
 </resources>

@@ -1,17 +1,27 @@
 [
   {
-    "sender": "anbeli260907@gmail.com",
+    "sender": "sum@one.de",
     "receiver": "anbeli260907@gmail.com",
-    "accepted": true
+    "accepted": false
   },
   {
-    "sender": "anbeli260907@gmail.com",
-    "receiver": "anbeli260907@gmail.com",
-    "geoString": "50.79020251072106,4.734110310673714"
+    "sender": "sum@one.de",
+    "receiver": "anbeli260906@gmail.com",
+    "accepted": false
   },
   {
-    "sender": "anbeli260907@gmail.com",
-    "receiver": "anbeli260907@gmail.com",
+    "sender": "sum@one.de",
+    "receiver": "someone@sum.de",
+    "accepted": false
+  },
+  {
+    "sender": "sum@one.de",
+    "receiver": "sum@one.de",
+    "geoString": "50.78366385804928,6.033183261752129"
+  },
+  {
+    "sender": "sum@one.de",
+    "receiver": "sum@one.de",
     "accepted": false
   }
 ]

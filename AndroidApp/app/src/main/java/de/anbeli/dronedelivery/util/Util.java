@@ -115,6 +115,20 @@ public class Util {
         return jsonString;
     }
 
+    public static String build_drone_id_obj_string(int hardwareID) {
+        String jsonString = null;
+        try {
+            jsonString = new JSONObject()
+                    .put("hardwareID", hardwareID)
+                    .put("sessionID", DatabaseConnector.session_id)
+                    .toString();
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+        return jsonString;
+    }
+
     public static ArrayList<Delivery> parse_fetch_deliveries_outgoing(JSONObject toParse) {
         ArrayList<Delivery> parsed = new ArrayList<>();
         try {
@@ -180,7 +194,21 @@ public class Util {
     public static ArrayList<Drone> parse_fetch_drones(JSONObject toParse) {
         ArrayList<Drone> parsed = new ArrayList<>();
 
-        System.out.println("teeesst");
+        try {
+            JSONArray rawArray = toParse.getJSONArray("drones");
+
+            JSONObject[] drones = new JSONObject[rawArray.length()];
+
+            for(int i = 0; i < rawArray.length(); i++) {
+                drones[i] = (JSONObject) rawArray.get(i);
+            }
+
+            for(JSONObject o : drones) {
+                parsed.add(new Drone("Drone 1", o.getLong("hardwareID")));
+            }
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
 
         return parsed;
     }

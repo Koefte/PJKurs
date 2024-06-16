@@ -82,9 +82,13 @@ public class SignUpActivity  extends AppCompatActivity {
                 String post_data = Util.build_user_obj_string(username, email, password_initial);
 
                 DatabaseConnector.process_async_post_request("users",post_data, res -> {
-                    Intent myIntent = new Intent(v.getContext(), LoginActivity.class);
-                    startActivity(myIntent);
-                    System.out.println(res);
+                    if(res.getString("message").equals("Succesfully created the account")) {
+                        Intent myIntent = new Intent(v.getContext(), LoginActivity.class);
+                        startActivity(myIntent);
+                    } else {
+                        ErrorPopup errorPopup = new ErrorPopup(this, getString(R.string.signup_email_taken));
+                        errorPopup.show();
+                    }
                 });
             }
         });

@@ -32,8 +32,8 @@ public class DroneAdapter extends RecyclerView.Adapter<DroneAdapter.DroneViewHol
         public DroneViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            drone_name = (TextView) itemView.findViewById(R.id.delivery_text);
-            hardware_id = (TextView) itemView.findViewById(R.id.delivery_state_text);
+            drone_name = (TextView) itemView.findViewById(R.id.drone_name);
+            hardware_id = (TextView) itemView.findViewById(R.id.drone_id_text);
 
             itemView.setOnClickListener(this);
         }
@@ -51,7 +51,7 @@ public class DroneAdapter extends RecyclerView.Adapter<DroneAdapter.DroneViewHol
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View contactView = inflater.inflate(R.layout.delivery_item, parent, false);
+        View contactView = inflater.inflate(R.layout.drone_item, parent, false);
 
         DroneAdapter.DroneViewHolder viewHolder = new DroneAdapter.DroneViewHolder(contactView);
         return viewHolder;
@@ -64,7 +64,7 @@ public class DroneAdapter extends RecyclerView.Adapter<DroneAdapter.DroneViewHol
         TextView drone_name = holder.drone_name;
         TextView hardware_id = holder.hardware_id;
         drone_name.setText(drone.get_name());
-        hardware_id.setText(Long.toString(drone.get_hardware_id()));
+        hardware_id.setText(c.getString(R.string.prefix_drone_hardware_ID) + " " + Long.toString(drone.get_hardware_id()));
     }
 
     @Override
@@ -72,17 +72,4 @@ public class DroneAdapter extends RecyclerView.Adapter<DroneAdapter.DroneViewHol
         return drone_list.size();
     }
 
-    private String getDeliveryTextState(Delivery.delivery_state state) {
-        switch(state) {
-            case DELIVERY_IN_PROGRESS:
-                return c.getString(R.string.text_deliver_state_in_progress);
-            case DELIVERY_COMPLETE:
-                return c.getString(R.string.text_deliver_state_complete);
-            case TO_BE_DELIVERED:
-                return c.getString(R.string.text_deliver_state_to_be_delivered);
-            case TO_BE_CONFIRMED:
-                return c.getString(R.string.text_deliver_state_to_be_confirmed);
-        }
-        return null;
-    }
 }

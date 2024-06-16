@@ -16,11 +16,16 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import de.anbeli.dronedelivery.activities.LoginActivity;
 import de.anbeli.dronedelivery.activities.MainActivity;
 import de.anbeli.dronedelivery.R;
 import de.anbeli.dronedelivery.activities.SignUpActivity;
 import de.anbeli.dronedelivery.util.DatabaseConnector;
+import de.anbeli.dronedelivery.util.ErrorPopup;
+import de.anbeli.dronedelivery.util.Util;
 
 public class SettingsFragment extends Fragment {
 
@@ -57,10 +62,17 @@ public class SettingsFragment extends Fragment {
     }
 
     private void sign_off() {
-        DatabaseConnector.session_id = -1;
-        DatabaseConnector.save_session_id(c);
+        DatabaseConnector.process_async_post_request("users", Util.build_session_id_obj_string(), res -> {
+            if(res.getString("message").equals("Logged out")) {
+                DatabaseConnector.session_id = -1;
+                DatabaseConnector.save_session_id(c);
 
-        Intent myIntent = new Intent(c, LoginActivity.class);
-        startActivity(myIntent);
+                Intent myIntent = new Intent(c, LoginActivity.class);
+                startActivity(myIntent);
+            } else {
+                ErrorPopup errorPopup = new ErrorPopup(c, getString(R.string.sign_off_failed));
+                errorPopup.show();
+            }
+        });
     }
 }

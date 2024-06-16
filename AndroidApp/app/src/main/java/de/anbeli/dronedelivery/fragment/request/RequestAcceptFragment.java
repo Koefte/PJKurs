@@ -80,7 +80,7 @@ public class RequestAcceptFragment extends Fragment implements OnMapReadyCallbac
 
             Marker marker = map.addMarker(new MarkerOptions()
                     .position(delivery_location)
-                    .title("Drop-off Point for Delivery from" + delivery.get_receiver()));
+                    .title(getString(R.string.prefix_delivery_pin) + " " + delivery.get_receiver()));
             marker.setDraggable(true);
         });
 
