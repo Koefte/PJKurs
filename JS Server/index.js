@@ -77,6 +77,9 @@ const requestB = {
 
 
 app.post('/api/stations',(req,res) => {
+
+  console.log(tets)
+
   const requestData = req.body;
   if(hasAllKeys(requestData,station)){
     const userEmail = getEmailById(requestData.sessionID)
