@@ -1,5 +1,4 @@
 #include <GPSHelper.h>
-#include <ListLibrary.h>
 #include <Wire.h>
 #include <QMC5883LCompass.h>
 #include <cmath>
