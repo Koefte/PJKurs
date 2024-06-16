@@ -40,8 +40,6 @@
 #define RUNHOTSPOT 9
 #define TRANSITION2 10
 
-int vtolID = 100;
-const char* serverUrl = "https://vtol.weylyn.net/api/requests";
 
 
 float maxChangePerCycleYaw = 0.1;
@@ -312,9 +310,9 @@ void armVtol(bool state) {
 }
 void servoDROP(bool state){
   if(state){
-    myServo.write(100);
+    //myServo.write(100);
   }else{
-    myServo.write(40);
+    //myServo.write(40);
   }
 }
 void loop() {
@@ -465,7 +463,7 @@ float pPitchCon(float pTHeight, float pHeight) {
     float desiredOutput = 0.5;
     float error = pHeight-pTHeight;   //Calc error
     error = constrain(error,-20,20);  //constrain error between -20 and 20
-    error = error/60                  //scale error to -0.3 and 0.3
+    error = error/60;                  //scale error to -0.3 and 0.3
     desiredOutput+= error;
     return desiredOutput;
 }
