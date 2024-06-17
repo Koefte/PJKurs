@@ -803,7 +803,7 @@ void control_Mixer() {
 
   //mixing Servos
   if(out_armed) {
-      out_command[SERVO1] = (rcin_thro*0.5-pitch_PID*5)*transitionFadeValue;
+      out_command[SERVO1] = (throttle_Hover*0.5-pitch_PID*5)*transitionFadeValue;
   }else{
       out_command[SERVO1] = 0;
   }
