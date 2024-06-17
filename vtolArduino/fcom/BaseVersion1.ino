@@ -45,7 +45,6 @@ float maxChangePerCycleYaw = 0.1;
 float previousYawOutput = 0.5;
 
 
-String requestPath = "/api/users";
 int vtolID = 100;
 const char* serverUrl = "https://vtol.weylyn.net/api/requests";
 WebServer server(80);
