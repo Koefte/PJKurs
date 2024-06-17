@@ -129,9 +129,9 @@ void setup() {
   Serial.begin(9600);
   if(setUPServer()){
     Serial.println("SetupServer success");
-    delay(10000);
-    Serial.println("FCOMV1: wating for timer");
     delay(100);
+    Serial.println("FCOMV1: wating for timer");
+    delay(10000);
     Serial.println("FCOMV1: setupcompass");
     setUPCompass();
     Serial.println("FCOMV1: setupPPM");
