@@ -1,14 +1,20 @@
+// Librarys importieren (Filesystem,Serversystem) etc
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const { request } = require('http');
 const app = express();
 const port = 3001;
 
+// Javascript Hilfsfunktion die guckt ob die Struktur 2er Objekte gleich ist
+// benutzt um die Struktur der Requests an den Server mit passenden Responeses anzugleichen 
 function hasAllKeys(objToCheck, keysObj) {
   if(Object.keys(objToCheck).length != (Object.keys(keysObj).length)) return false
   return Object.keys(keysObj).every(key => objToCheck.hasOwnProperty(key));
 }
+
+// Ausgehend von einer dynamischen SessionID (ids.json) den passenden Account finden
+// Primarykey: Email
 function getEmailById(id){
   let sessionData = JSON.parse(fs.readFileSync('ids.json', 'utf-8'));
   console.log(sessionData)
@@ -18,6 +24,7 @@ function getEmailById(id){
   return null
 }
 
+// Ausgehend von der Hardware ID der Drone(drones.json) den passenden Account finden
 function getUserByHardwareId(id){
   let dronesTable = JSON.parse(fs.readFileSync('drones.json', 'utf-8'));
   for(let entry of dronesTable){
@@ -27,6 +34,8 @@ function getUserByHardwareId(id){
 
 app.use(bodyParser.json());
 
+// Definitionen verschiedener möglicher Strukturen der Request des Clients
+// Ausgehend von einer passenden Struktur werden verschieden Serveraktionen getätigt
 const acc = {
   name:"Max",
   email:"maxmustermann@gmail.com",
@@ -68,24 +77,31 @@ const requestB = {
   geoString:"23N123O",
 }
 
-
+// Endpunkt für die Verwaltung von Dronen
 app.post('/api/drones',(req,res) => {
   const requestData = req.body;
-  if(hasAllKeys(requestData,drone)){
-    const userEmail = getEmailById(requestData.sessionID)
+  if(hasAllKeys(requestData,drone)){ // Der Client möchte eine Drohne posten
+    const userEmail = getEmailById(requestData.sessionID) // Die vom Client gegebene Session ID wird zum Finden des Users benutzt
+    // Die gespeicherten Drohnen werden als Array geladen
     let dronesTable = JSON.parse(fs.readFileSync('drones.json', 'utf-8'))
+    // Das Array wird durch die Drohne des Users ergänzt
     dronesTable.push({user:userEmail,hardwareID:requestData.hardwareID})
+    // Das JSON wird wieder gespeichert
     fs.writeFileSync('drones.json', JSON.stringify(dronesTable, null, 2), 'utf-8');
+    // Feedback zum Client
     res.status(200).json({message:"Succesfully created the drone"})
     return
   }
-  else if(hasAllKeys(requestData,ownersession)){
-    const userEmail = getEmailById(requestData.ownerSession)
+  else if(hasAllKeys(requestData,ownersession)){ // Der Client möchte seine Drohne getten
+    const userEmail = getEmailById(requestData.ownerSession) // User ausgehend von SessionID ( erklärt oben)
+
+		// Die gespeicherten Dronen werden geladen und durchsucht
     let dronesTable = JSON.parse(fs.readFileSync('drones.json', 'utf-8'));
     let drone;
     for(let entry_ of dronesTable){
       if(entry_.user == userEmail) drone = entry_.hardwareID
     }   
+    
     res.status(200).json({drones:[{hardwareID:drone}]})
     return
   }
