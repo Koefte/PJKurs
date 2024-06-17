@@ -86,6 +86,9 @@ public class SignUpActivity  extends AppCompatActivity {
                 String post_data = Util.build_user_obj_string(username, email, password_initial);
 
                 DatabaseConnector.process_async_post_request("users",post_data, res -> {
+
+                    //JAA DER RECHTSCHREIBFEHLER IST TEIL DES PROTOKOLLS AHAHAHAHAH ja :)
+
                     if(res.getString("message").equals("Succesfully created the account")) {
                         Intent myIntent = new Intent(v.getContext(), LoginActivity.class);
                         startActivity(myIntent);

@@ -30,7 +30,7 @@ public class DatabaseConnector {
     static ExecutorService mExecutor = Executors.newSingleThreadExecutor();
 
     //Address of Server
-    public static final String db_access = "http://10.0.2.2:3001/api/";
+    public static final String db_access = "https://vtol.weylyn.net/api/";
     public static long session_id = -1;
     public interface onTaskFinishListener {
         void on_request_completed(JSONObject res) throws JSONException;
@@ -86,14 +86,16 @@ public class DatabaseConnector {
             try {
                 HttpURLConnection con = get_http_url_connection(url_add);
 
+                //push data into output stream to send to server
+
                 OutputStream os = con.getOutputStream();
                 os.write(data.getBytes());
                 os.flush();
                 os.close();
 
-                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
+                //read input with BufferedReader
 
-                System.out.println(con.getResponseCode());
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
 
                 String inputLine;
                 StringBuilder response = new StringBuilder();
@@ -135,6 +137,9 @@ public class DatabaseConnector {
         }
         con.setDoOutput(true);
         con.setDoInput(true);
+
+        //Set post type request and json as format
+
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json");
         con.setRequestProperty("Accept", "application/json");
@@ -142,7 +147,7 @@ public class DatabaseConnector {
     }
 
     public static void save_session_id(Context c) {
-        //save session ID
+        //save session ID in SharedPreferences
         SharedPreferences.Editor e = c.getSharedPreferences("save_data", MODE_PRIVATE).edit();
         e.putLong("session_id", DatabaseConnector.session_id);
         e.apply();
