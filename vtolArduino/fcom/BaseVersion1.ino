@@ -38,6 +38,7 @@
 #define WAITFORINPUT 8
 #define RUNHOTSPOT 9
 #define TRANSITION2 10
+#define WAITFORRESET 11
 
 
 
@@ -358,7 +359,7 @@ void flyVtol() {
       yaw = pYAWCon((gps.getAngle(tLat, tLog)),angle);
       pitch = pPitchCon(travelALT,alt);
       thro = correctSpeed(speed,travelSpeed);
-      if(travelALT-travelALT*0.2 > alt){ 
+      if(travelALT - travelALT*0.2 > alt  || alt > travelALT + travelALT*0.2 ){ 
         flightState = COPTERLAND;
       }
       if(droppRadius > calculateDistanceToTarget(lat,log,tLat,tLog)){ 
@@ -384,8 +385,8 @@ void flyVtol() {
       yaw = pYAWCon((gps.getAngle(homeLat, homeLog)),angle);
       pitch = pPitchCon(travelALT,alt);
       thro = correctSpeed(speed,travelSpeed);
-      if(travelALT-travelALT*0.2 > alt){ 
-        flightState = TRANSITION2;
+      if(travelALT - travelALT*0.5 > alt  || alt > travelALT + travelALT*0.5 ){ 
+        flightState = COPTERLAND;
       }
       if(droppRadius > calculateDistanceToTarget(lat,log,homeLat,homeLog)){ 
         flightState = TRANSITION2;
@@ -404,15 +405,15 @@ void flyVtol() {
         thro=0.25;
       }else{ 
         thro=0.5;
+         if(rawDistance>1000){ 
+          flightState = COPTERDISARM;
+         }
       }  
-      if(rawDistance>1000){ 
-        flightState = COPTERDISARM;
-      }
       break;
 
     case COPTERDISARM:
       armVtol(false);
-      flightState = WAITFORINPUT;
+      flightState = WAITFORRESET;
       break;
     case WAITFORINPUT:
       delay(1000);
@@ -420,6 +421,8 @@ void flyVtol() {
       flightState = COPTERARM;
     case RUNHOTSPOT:
       server.handleClient();
+      break;
+    case WAITFORRESET:
       break;
     default:
       ESP.restart();
