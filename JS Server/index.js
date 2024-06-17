@@ -82,11 +82,10 @@ app.post('/api/drones',(req,res) => {
   const requestData = req.body;
   if(hasAllKeys(requestData,drone)){ // Der Client möchte eine Drohne posten
     const userEmail = getEmailById(requestData.sessionID) // Die vom Client gegebene Session ID wird zum Finden des Users benutzt
-    // Die gespeicherten Drohnen werden als Array geladen
+    
+    // Die gespeicherten Drohnen werden als Array geladen und durch die Drohne des Users ergänzt
     let dronesTable = JSON.parse(fs.readFileSync('drones.json', 'utf-8'))
-    // Das Array wird durch die Drohne des Users ergänzt
     dronesTable.push({user:userEmail,hardwareID:requestData.hardwareID})
-    // Das JSON wird wieder gespeichert
     fs.writeFileSync('drones.json', JSON.stringify(dronesTable, null, 2), 'utf-8');
     // Feedback zum Client
     res.status(200).json({message:"Succesfully created the drone"})
@@ -101,57 +100,68 @@ app.post('/api/drones',(req,res) => {
     for(let entry_ of dronesTable){
       if(entry_.user == userEmail) drone = entry_.hardwareID
     }   
-    
+    // Gefundene Drohne wird zurück gegeben zum Client 
     res.status(200).json({drones:[{hardwareID:drone}]})
     return
   }
+  // Falls die Request vom User ein unbekanntes Format hat wird dies züruckgegeben mit Statuscode 400
   res.status(400).json({message:"Wrong format"})
 })
 
+// Endpunkt für die Verwaltung von Requests/Deliveries
 app.post('/api/requests',(req,res) => {
   const requestData = req.body;
-  if(hasAllKeys(requestData,requestA)){
+  if(hasAllKeys(requestData,requestA)){ // Der Client möchte eine Request an einen anderen User stellen (hier noch ohne Koordinaten)
     const senderEmail = getEmailById(requestData.sessionID)
+    // Gespeicherte Requests werden geladen, ergänzt und gespeichert
     let requestTable = JSON.parse(fs.readFileSync('requests.json', 'utf-8'));
     requestTable.push({sender:senderEmail,receiver:requestData.receiver,accepted:false})
     fs.writeFileSync('requests.json', JSON.stringify(requestTable, null, 2), 'utf-8');
+    // Feedback zum User
     res.status(200).json({message:"Succesfully created the request A"})
     return
   }
-  else if(hasAllKeys(requestData,requestB)){
+  else if(hasAllKeys(requestData,requestB)){ // Der Client möchte eine Request stellen ( mit Koordinaten)
     const senderEmail = getEmailById(requestData.sessionID)
     let requestTable = JSON.parse(fs.readFileSync('requests.json', 'utf-8'));
+    // vorherige Request (ohne Koordinaten) wird gelöscht
     requestTable = requestTable.filter((el) => !(el.sender == senderEmail && el.receiver == requestData.receiver))
+    // Ergänzung nach bekanntem Schema,Feedback an User
     requestTable.push({sender:senderEmail,receiver:requestData.receiver,geoString:requestData.geoString})
     fs.writeFileSync('requests.json', JSON.stringify(requestTable, null, 2), 'utf-8');
     res.status(200).json({message:"Succesfully created the request B"})
     return
   }
-  else if(hasAllKeys(requestData,accept)){
+  else if(hasAllKeys(requestData,accept)){ // Der Client möchte eine Request akzeptieren
     const receiverEmail = getEmailById(requestData.acceptorSession)
     let requestTable = JSON.parse(fs.readFileSync('requests.json', 'utf-8'));
+    // Requests werden durchsucht und passende Request wird akzeptiert
     for(let request of requestTable){
       if(request.receiver == receiverEmail && request.accepted != undefined) request.accepted = true
     }
+    // wurde jz genug erklärt hoffentlich klar
     fs.writeFileSync('requests.json', JSON.stringify(requestTable, null, 2), 'utf-8');
     res.status(200).json({message:"Succesfully accepted the request"})
     return
   }
-  else if(hasAllKeys(requestData,hardwareID)){
+  else if(hasAllKeys(requestData,hardwareID)){ // Die Drohne fordert ihre Ziele an
     let requestTable = JSON.parse(fs.readFileSync('requests.json', 'utf-8'));
-    let coords = []
-    let user = getUserByHardwareId(requestData.hardwareID)
+    let coords = [] // Array aus Koordinaten ( Zielen der Drohne )
+    let user = getUserByHardwareId(requestData.hardwareID) // User dem die Drohne zugewiesen ist
     for(let req of requestTable){
       if(req.sender == user) coords.push(req.geoString)
     }
-    requestTable = requestTable.filter((req) => req.sender != user)
+    requestTable = requestTable.filter((req) => req.sender != user) // Request werden gelöscht (Drohne führt sie aus)
     fs.writeFileSync('requests.json', JSON.stringify(requestTable, null, 2), 'utf-8')
-    res.status(200).json({coords:coords})
+    res.status(200).json({coords:coords}) // Die Koordinaten werden zurück an die Drohne geschickt
     return
   }
-  else if(hasAllKeys(requestData,session)){
-    const clientEmail = getEmailById(requestData.sessionID)
+  else if(hasAllKeys(requestData,session)){ // Der Client möchte seine Requests abrufen 
+    const clientEmail = getEmailById(requestData.sessionID) // Der Client übergibt seine SessionID 
     let requestTable = JSON.parse(fs.readFileSync('requests.json', 'utf-8'));
+    
+    // Die Requests werden durchsucht, 
+    // der Client bekommt eine Liste aus gestellten , und eine Liste aus erhaltenen Requests
     let incomingRequests = []
     let outgoingRequests = []
     console.log(clientEmail)
@@ -165,22 +175,24 @@ app.post('/api/requests',(req,res) => {
   res.status(400).json({message:"Wrong format"})
 })
 
-// POST request handler
+// Endpunkt der Accounts
 app.post('/api/users', (req, res) => {
   const requestData = req.body;
   console.log(requestData);
-  if(hasAllKeys(requestData,acc) ){
+  if(hasAllKeys(requestData,acc) ){ // Der User möchte einen Account erstellen
     try {
       const existingData = fs.readFileSync('users.json', 'utf-8');
       const parsedData = JSON.parse(existingData);
-      for(let user of parsedData){
+      for(let user of parsedData){ // Es wird geguckt ob ein Account mit der Email bereits existiert
         console.log(user)
         if(user.email == requestData.email){
           console.log(`Found duplicate: ${requestData}`)
-          res.status(400).json({message:"No duplicates allowed, one user per email"})
+          // Der User wird darüber informiert, falls seine Email schon benutzt ist
+          res.status(400).json({message:"No duplicates allowed, one user per email"}) 
           return
         }
       }
+      // Ist die Email nicht in Benutzung wird der Account erstellt
       parsedData.push(requestData);
       fs.writeFileSync('users.json', JSON.stringify(parsedData, null, 2), 'utf-8');
       console.log('Data appended to users.json');
@@ -193,7 +205,7 @@ app.post('/api/users', (req, res) => {
     }
   
   }
-  else if(hasAllKeys(requestData,entry)){
+  else if(hasAllKeys(requestData,entry)){ // Der User möchte sich einloggen
     let existingData = fs.readFileSync('users.json', 'utf-8');
     existingData = JSON.parse(existingData)
     if(existingData.map(data => JSON.stringify([data.email, data.passwort])).includes(JSON.stringify(Object.values(requestData)))){
