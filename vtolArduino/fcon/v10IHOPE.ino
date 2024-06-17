@@ -764,13 +764,13 @@ void control_Mixer() {
   float throttle_Hover;
   if(rcin_aux==6){
     if (rcin_thro >= 0.8) {
-     throttle_Hover = addAndGetSmoothedValue(0.5);
+     throttle_Hover = addAndGetSmoothedValue(0.35);
     } else if (rcin_thro >= 0.6) {
-     throttle_Hover = addAndGetSmoothedValue(0.45);
-    }else if (rcin_thro >= 0.4) {
-      throttle_Hover = addAndGetSmoothedValue(0.43);
-    }else if (rcin_thro >= 0.2) {
      throttle_Hover = addAndGetSmoothedValue(0.4);
+    }else if (rcin_thro >= 0.4) {
+      throttle_Hover = addAndGetSmoothedValue(0.35);
+    }else if (rcin_thro >= 0.2) {
+     throttle_Hover = addAndGetSmoothedValue(0.31);
     } else {
       throttle_Hover=0;
     }
