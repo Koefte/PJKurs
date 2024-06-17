@@ -208,29 +208,35 @@ app.post('/api/users', (req, res) => {
   else if(hasAllKeys(requestData,entry)){ // Der User möchte sich einloggen
     let existingData = fs.readFileSync('users.json', 'utf-8');
     existingData = JSON.parse(existingData)
+    // Es wird geguckt ob der User existiert
     if(existingData.map(data => JSON.stringify([data.email, data.passwort])).includes(JSON.stringify(Object.values(requestData)))){
-      const sessionID = Math.floor(Math.random() * Date.now());
+      const sessionID = Math.floor(Math.random() * Date.now()); // Es wird eine SessionID erstellt
       let sessionData = JSON.parse(fs.readFileSync('ids.json', 'utf-8'));
+      // Besitzt er schon eine Wird ihm das mitgeteilt
       for(let entry of sessionData){
         if(entry.email == requestData.email) {
           res.status(400).json({error:"You already have a session id"})
           return
         }
       }
+      // Der User existiert und ist nicht eingeloggt , also wird ihm eine SessionID zugewiesen
       sessionData.push({
         email:requestData.email,
         sessionID:sessionID
       })
+      // Diese wird zurück zum Client gegeben und in der Datenbank gesichert
       fs.writeFileSync('ids.json', JSON.stringify(sessionData, null, 2), 'utf-8');
       res.status(200).json({message:"Exists",sessionID:sessionID})
     }
     else{
+      // Der User existiert nicht also kann er sich nicht einloggen
       res.status(200).json({message:"Doesnt exist"})
     }
     return;
   }
   
-  else if(hasAllKeys(requestData,session)){
+  else if(hasAllKeys(requestData,session)){ // Der User loggt sich aus
+		// Er übergibt seine SessionID welche aus dem System gelöscht wird
     let sessionData = JSON.parse(fs.readFileSync('ids.json', 'utf-8'));
     console.log(sessionData)
     sessionData = sessionData.filter((obj) => obj.sessionID != requestData.sessionID)
@@ -241,12 +247,17 @@ app.post('/api/users', (req, res) => {
   }
   res.status(400).json({ error: 'Wrong data' });
 });
+
+// Server deployen
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
 });
-app.get('/api/users', (req, res) => {
+
+
+app.get('/api/users', (req, res) => { // User abrufen
   try {
     const data = fs.readFileSync('users.json', 'utf-8');
+    // Der Client bekommt ein Array aus allen Usern geschickt, hierbei wird natürlich nicht das Passwort übergeben
     const jsonData = JSON.parse(data).map(data => ({name: data.name, email: data.email}));
     res.status(200).json(jsonData);
     console.log("Succesfully received get request")
