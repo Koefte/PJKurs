@@ -4,13 +4,10 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        style="@style/standard_text"
+    <View
+        style="@style/icon_view"
         android:id="@+id/title_requests"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/title_requests"
-        android:textSize="@dimen/font_size_header2"
+        android:background="@drawable/user_solid"
 
         android:layout_margin="@dimen/topic_split_margin_top"
 
@@ -20,6 +17,7 @@
 
 
     <LinearLayout
+        android:layout_marginTop="@dimen/topic_split_margin_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="vertical"
@@ -28,7 +26,7 @@
             android:id="@+id/deliveries_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="60dp"
+            android:layout_marginBottom="130dp"
             app:layoutManager="LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
