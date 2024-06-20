@@ -6,3 +6,6 @@ Dokumentation App in Ordner;
 
 Präsentation
 - praesi.pdf
+
+App
+- DroneDrop.apk, alternativ QR Code in Präsentation
